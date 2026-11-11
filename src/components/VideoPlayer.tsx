@@ -101,7 +101,7 @@ export function VideoPlayer({ youtubeId, titulo }: { youtubeId: string; titulo: 
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-bark-900/10 bg-black shadow-(--shadow-card) select-none" onContextMenu={(e) => e.preventDefault()}>
+    <div className="min-w-0 overflow-hidden rounded-2xl border border-bark-900/10 bg-black shadow-(--shadow-card) select-none" onContextMenu={(e) => e.preventDefault()}>
       <div className="relative aspect-video overflow-hidden">
         <div ref={host} className="absolute inset-x-0 -top-1/4 -bottom-1/4 [&>iframe]:h-full [&>iframe]:w-full [&_iframe]:pointer-events-none" />
         {(fase === "inicio" || fase === "fim") && (
@@ -121,7 +121,7 @@ export function VideoPlayer({ youtubeId, titulo }: { youtubeId: string; titulo: 
         </button>
         {!pronto && <div className="absolute inset-0 z-20 flex items-center justify-center bg-black text-sm text-white/70">Carregando vídeo…</div>}
       </div>
-      <div className="flex items-center gap-3 bg-white px-4 py-3 text-bark-900">
+      <div className="flex min-w-0 items-center gap-3 bg-white px-3 py-2.5 text-bark-900 sm:px-4 sm:py-3">
         <button type="button" onClick={alternar} disabled={!pronto} aria-label={tocando ? "Pausar" : "Reproduzir"} className="flex h-10 w-10 items-center justify-center rounded-full bg-leaf-600 text-white disabled:opacity-50">
           {tocando ? (
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden>
@@ -136,7 +136,8 @@ export function VideoPlayer({ youtubeId, titulo }: { youtubeId: string; titulo: 
         <span className="num font-mono text-xs text-bark-500">
           {mmss(tempo.t)} / {tempo.d ? mmss(tempo.d) : "--:--"}
         </span>
-        <span className="min-w-0 flex-1 truncate text-sm font-semibold">{titulo}</span>
+        <span className="hidden min-w-0 flex-1 truncate text-sm font-semibold sm:block">{titulo}</span>
+        <span className="flex-1 sm:hidden" />
         <button
           type="button"
           aria-label={mudo ? "Ativar som" : "Silenciar"}

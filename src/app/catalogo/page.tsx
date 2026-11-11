@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 export default function CatalogoPage() {
   const items = getCards();
   return (
-    <div className="container-page py-10">
-      <header className="mb-8">
-        <h1 className="text-4xl">Catálogo de projetos</h1>
+    <div className="container-page py-6 lg:py-10">
+      <header className="mb-5 lg:mb-8">
+        <h1 className="text-3xl lg:text-4xl">Catálogo de projetos</h1>
         <p className="mt-2 max-w-2xl text-bark-700">
           Cada ficha traz medidas finais, lista de material com perda, lista de corte com sentido do veio, ferragens e montagem passo a passo.
         </p>

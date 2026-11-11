@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { buscarBloqueado, useAcesso } from "@/lib/acesso";
 import { UnlockBox } from "./UnlockBox";
 import { VideoPlayer } from "./VideoPlayer";
@@ -10,6 +10,7 @@ export type VideoPublico = { id: string; titulo: string; descricao?: string; liv
 /** Lista de vídeos por tema. Os exclusivos só recebem o código do vídeo do servidor, depois da senha. */
 export function VideosView({ videos, temas }: { videos: VideoPublico[]; temas: string[] }) {
   const { liberado } = useAcesso();
+  const topo = useRef<HTMLDivElement>(null);
   const [tema, setTema] = useState<string>("Todos");
   const lista = useMemo(() => (tema === "Todos" ? videos : videos.filter((v) => v.tema === tema)), [videos, tema]);
   const [atual, setAtual] = useState<VideoPublico | null>(videos[0] ?? null);
@@ -32,8 +33,8 @@ export function VideosView({ videos, temas }: { videos: VideoPublico[]; temas: s
     );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
-      <div className="space-y-2 lg:sticky lg:top-24">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+      <div ref={topo} className="min-w-0 scroll-mt-16 space-y-2 lg:sticky lg:top-24">
         {atual && (ytId ? <VideoPlayer key={ytId} youtubeId={ytId} titulo={atual.titulo} /> : <UnlockBox titulo="Vídeo exclusivo" />)}
         {atual && (
           <div className="px-1">
@@ -43,25 +44,29 @@ export function VideosView({ videos, temas }: { videos: VideoPublico[]; temas: s
         )}
       </div>
 
-      <div>
-        <div className="mb-3 flex flex-wrap gap-2">
+      <div className="min-w-0">
+        <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0">
           {["Todos", ...temas].map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setTema(t)}
-              className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors ${tema === t ? "border-wood-500 bg-wood-500 text-white" : "border-bark-900/15 bg-white text-bark-700 hover:bg-wood-100"}`}
+              className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors ${tema === t ? "border-wood-500 bg-wood-500 text-white" : "border-bark-900/15 bg-white text-bark-700 hover:bg-wood-100"}`}
             >
               {t}
             </button>
           ))}
         </div>
-        <ul className="max-h-[70vh] space-y-2 overflow-y-auto pr-1">
+        <ul className="space-y-2 lg:max-h-[70vh] lg:overflow-y-auto lg:pr-1">
           {lista.map((v) => (
             <li key={v.id}>
               <button
                 type="button"
-                onClick={() => setAtual(v)}
+                onClick={() => {
+                  setAtual(v);
+                  // no celular a lista fica embaixo: sobe até o player
+                  if (window.innerWidth < 1024) topo.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className={`app-card flex w-full items-center gap-3 p-2 text-left transition-colors hover:bg-wood-50 ${atual?.id === v.id ? "ring-2 ring-wood-400" : ""}`}
               >
                 <span className="relative aspect-video w-28 shrink-0 overflow-hidden rounded-lg bg-wood-100">

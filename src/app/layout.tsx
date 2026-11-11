@@ -4,6 +4,7 @@ import { Guard } from "@/components/Guard";
 import { Providers } from "@/components/Providers";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { BottomNav } from "@/components/BottomNav";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -21,17 +22,18 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: site.name, statusBarStyle: "black-translucent" },
 };
 
-export const viewport: Viewport = { themeColor: "#1a120c" };
+export const viewport: Viewport = { themeColor: "#1a120c", viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${zilla.variable} ${cond.variable}`}>
-      <body className="flex min-h-dvh flex-col">
+      <body className="flex min-h-dvh flex-col pb-[calc(84px+env(safe-area-inset-bottom))] lg:pb-0">
         <Guard>
           <Providers>
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />
+            <BottomNav />
           </Providers>
         </Guard>
       </body>

@@ -51,10 +51,12 @@ export function CatalogView({ items }: { items: ProjectCardData[] }) {
   }, [items, sp]);
 
   const anyFilter = query || FILTERS.some((f) => active[f.key]);
+  const nFiltros = FILTERS.filter((f) => active[f.key]).length + (ordem ? 1 : 0);
+  const [filtros, setFiltros] = useState(false);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[250px_1fr]">
-      <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-8">
+      <aside className="space-y-3 lg:space-y-5 lg:sticky lg:top-24 lg:self-start">
         <form
           role="search"
           onSubmit={(e) => {
@@ -73,6 +75,17 @@ export function CatalogView({ items }: { items: ProjectCardData[] }) {
           </div>
         </form>
 
+        <button
+          type="button"
+          onClick={() => setFiltros((v) => !v)}
+          aria-expanded={filtros}
+          className="flex w-full items-center justify-between rounded-xl border border-bark-900/15 bg-white px-4 py-3 text-sm font-semibold text-bark-800 lg:hidden"
+        >
+          <span>Filtros e ordem{nFiltros ? ` (${nFiltros})` : ""}</span>
+          <span aria-hidden>{filtros ? "▲" : "▼"}</span>
+        </button>
+
+        <div className={`space-y-5 ${filtros ? "" : "hidden"} lg:block`}>
         {FILTERS.map((f) => (
           <div key={f.key}>
             <label htmlFor={f.key} className="label">
@@ -111,6 +124,7 @@ export function CatalogView({ items }: { items: ProjectCardData[] }) {
             Limpar filtros
           </button>
         )}
+        </div>
       </aside>
 
       <div>

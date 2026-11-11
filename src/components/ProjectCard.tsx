@@ -27,7 +27,11 @@ export function ProjectCard({ p, index = 0 }: { p: ProjectCardData; index?: numb
             <ProjectIllustration h={p.heightMm} w={p.widthMm} d={p.depthMm} material={p.primaryMaterial} className="absolute inset-0 m-auto h-full w-full p-4" />
           )}
           <span className="chip absolute top-3 left-3 border-transparent bg-bark-900/85 text-wood-100">{label(CATEGORIES, p.category)}</span>
-          {p.locked && <span className="chip absolute top-3 right-3 border-transparent bg-black/75 text-wood-200">🔒 Exclusivo</span>}
+          {p.locked ? (
+            <span className="chip absolute top-3 right-3 border-transparent bg-black/75 text-wood-200">🔒 Exclusivo</span>
+          ) : (
+            <span className="chip absolute top-3 right-3 border-transparent bg-leaf-600 text-white">✓ Liberado</span>
+          )}
         </div>
         <div className="flex flex-1 flex-col gap-3 p-4">
           <h3 className="text-lg text-bark-900 group-hover:text-wood-600">{p.title}</h3>

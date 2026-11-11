@@ -107,7 +107,9 @@ export function imagePrompts(p: ProjectDef): string[] {
 }
 
 /** O que fica bloqueado: projetos intermediários e avançados ("metade do conteúdo"). */
-export const isLocked = (p: Pick<ProjectDef, "difficulty">) => p.difficulty !== "iniciante";
+/** Os primeiros projetos do catálogo ficam livres (vitrine); do PROJETOS_LIVRES em diante, exclusivos. */
+export const PROJETOS_LIVRES = 36;
+export const isLocked = (posicao: number) => posicao >= PROJETOS_LIVRES;
 
 /** Renders do modelo 3D (gerados no build) + fotos que você colocar em public/images/projetos/<slug>/ */
 function generatedImages(slug: string, hasModel: boolean, locked: boolean): string[] {
@@ -127,8 +129,8 @@ function photos(slug: string): string[] {
     .map((f) => withBase(`/images/projetos/${slug}/${f}`));
 }
 
-function build(p: ProjectDef): Project {
-  const locked = isLocked(p);
+function build(p: ProjectDef, posicao: number): Project {
+  const locked = isLocked(posicao);
   const defaultKey = defaultKeyOf(p);
   const matByKey = new Map(p.materials.map((m) => [m.key, m]));
   return {
@@ -192,10 +194,10 @@ let cache: Project[] | null = null;
 export function getProjects(): Project[] {
   if (!cache) {
     const seen = new Set<string>();
-    cache = projectDefs.map((p) => {
+    cache = projectDefs.map((p, i) => {
       if (seen.has(p.slug)) throw new Error(`slug duplicado: ${p.slug}`);
       seen.add(p.slug);
-      return build(p);
+      return build(p, i);
     });
   }
   return cache;
@@ -225,7 +227,7 @@ export const toCard = (p: Project): ProjectCardData => ({
 export function getCards(): ProjectCardData[] {
   return getProjects()
     .map(toCard)
-    .sort((a, b) => Number(b.featured) - Number(a.featured) || a.title.localeCompare(b.title, "pt-BR"));
+    .sort((a, b) => Number(a.locked) - Number(b.locked) || Number(b.featured) - Number(a.featured) || a.title.localeCompare(b.title, "pt-BR")); // livres primeiro (vitrine), depois os exclusivos
 }
 
 export function getRelated(p: Project, limit = 3) {
