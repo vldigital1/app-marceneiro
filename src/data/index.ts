@@ -129,7 +129,7 @@ function photos(slug: string): string[] {
     .map((f) => withBase(`/images/projetos/${slug}/${f}`));
 }
 
-function build(p: ProjectDef, posicao: number): Project {
+export function montarProjeto(p: ProjectDef, posicao: number): Project {
   const locked = isLocked(posicao);
   const defaultKey = defaultKeyOf(p);
   const matByKey = new Map(p.materials.map((m) => [m.key, m]));
@@ -197,7 +197,7 @@ export function getProjects(): Project[] {
     cache = projectDefs.map((p, i) => {
       if (seen.has(p.slug)) throw new Error(`slug duplicado: ${p.slug}`);
       seen.add(p.slug);
-      return build(p, i);
+      return montarProjeto(p, i);
     });
   }
   return cache;
