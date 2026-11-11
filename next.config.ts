@@ -9,12 +9,13 @@ const vercel = Boolean(process.env.VERCEL);
 const basePath = vercel ? "" : (process.env.BASE_PATH ?? "").replace(/\/$/, "");
 
 // domínios autorizados (proteção contra cópia)
+const OFICIAIS = ["appmarceneiro.online", "www.appmarceneiro.online"];
 const dominiosArquivo = existsSync("config-servidor.json") ? (JSON.parse(readFileSync("config-servidor.json", "utf8")).dominios as string[]) : [];
-const dominiosVercel = [process.env.DOMINIOS ?? "", process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "", process.env.VERCEL_URL ?? "", process.env.VERCEL_BRANCH_URL ?? ""]
+const dominiosVercel = [OFICIAIS.join(","), process.env.DOMINIOS ?? "", process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "", process.env.VERCEL_URL ?? "", process.env.VERCEL_BRANCH_URL ?? ""]
   .flatMap((d) => d.split(","))
   .map((d) => d.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, ""))
   .filter(Boolean);
-const dominios = [...new Set(vercel ? dominiosVercel : dominiosArquivo)].join(",");
+const dominios = [...new Set(vercel ? dominiosVercel : [...OFICIAIS, ...dominiosArquivo])].join(",");
 
 const seguranca = [
   { key: "X-Frame-Options", value: "SAMEORIGIN" },

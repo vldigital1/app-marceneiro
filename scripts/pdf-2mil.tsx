@@ -15,7 +15,7 @@ import { CATEGORIES, DIFFICULTIES, GRAIN_LABEL, costRange, label } from "../src/
 import { variacoes } from "./variacoes";
 
 const TOTAL = Number(process.env.TOTAL ?? 2000);
-const ENDERECO = process.env.APP_URL ?? "app-marceneiro-icsj.vercel.app";
+const ENDERECO = process.env.APP_URL ?? "appmarceneiro.online";
 const POR_PARTE = 200;
 const PASTA = join(process.cwd(), "docs", "_partes");
 

@@ -10,7 +10,7 @@ import { VIDEOS } from "../src/content/videos";
 import { TIPOS } from "../src/lib/configurador";
 import { PROJETOS_LIVRES, getProjects } from "../src/data";
 
-const ENDERECO = process.env.APP_URL ?? "app-marceneiro-icsj.vercel.app";
+const ENDERECO = process.env.APP_URL ?? "appmarceneiro.online";
 // total de projetos divulgado no guia (quando o catálogo passar desse número, vale o número real)
 const PROJETOS_ANUNCIADOS = 435;
 

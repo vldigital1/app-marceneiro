@@ -25,7 +25,7 @@ export function lerConfig(): ConfigServidor {
     const nova: ConfigServidor = {
       senhas: [gerarSenha()],
       segredo: randomBytes(32).toString("base64url"),
-      dominios: ["diariodagestacao.online", "www.diariodagestacao.online", "localhost", "127.0.0.1"],
+      dominios: ["appmarceneiro.online", "www.appmarceneiro.online", "diariodagestacao.online", "www.diariodagestacao.online", "localhost", "127.0.0.1"],
       diasValidade: 365,
     };
     writeFileSync(ARQ, JSON.stringify(nova, null, 2) + "\n", "utf8");
