@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Counter } from "@/components/Counter";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SearchBox } from "@/components/SearchBox";
+import { SeloSabado } from "@/components/SeloSabado";
 import { getCards, getPosts, getStats } from "@/data";
 import { withBase } from "@/lib/base";
 import { CATEGORIES } from "@/lib/taxonomy";
@@ -81,6 +82,10 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <div className="container-page pt-6">
+        <SeloSabado />
+      </div>
 
       {/* O APP */}
       <section className="border-b border-bark-900/10 bg-wood-100">

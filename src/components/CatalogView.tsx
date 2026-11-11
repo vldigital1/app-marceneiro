@@ -6,6 +6,8 @@ import { useMemo, useState } from "react";
 import type { ProjectCardData } from "@/data/model";
 import { CATEGORIES, DIFFICULTIES, ENVIRONMENTS, MATERIALS } from "@/lib/taxonomy";
 import { ProjectCard } from "./ProjectCard";
+import { SeloSabado } from "./SeloSabado";
+import { useProjetosNovos } from "@/lib/novidades";
 
 const normalize = (s: string) =>
   s
@@ -51,6 +53,8 @@ export function CatalogView({ items }: { items: ProjectCardData[] }) {
   }, [items, sp]);
 
   const anyFilter = query || FILTERS.some((f) => active[f.key]);
+  const slugs = useMemo(() => items.map((p) => p.slug), [items]);
+  const novos = useProjetosNovos(slugs);
   const nFiltros = FILTERS.filter((f) => active[f.key]).length + (ordem ? 1 : 0);
   const [filtros, setFiltros] = useState(false);
 
@@ -128,6 +132,7 @@ export function CatalogView({ items }: { items: ProjectCardData[] }) {
       </aside>
 
       <div>
+        <SeloSabado novos={novos.size} className="mb-4" />
         <p className="mb-4 text-sm text-bark-700" aria-live="polite">
           <strong className="num">{results.length}</strong> {results.length === 1 ? "projeto encontrado" : "projetos encontrados"}
           {query && (
@@ -141,7 +146,7 @@ export function CatalogView({ items }: { items: ProjectCardData[] }) {
           {results.length ? (
             <motion.div key="grid" className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {results.map((p, i) => (
-                <ProjectCard key={p.slug} p={p} index={i} />
+                <ProjectCard key={p.slug} p={p} index={i} novo={novos.has(p.slug)} />
               ))}
             </motion.div>
           ) : (
