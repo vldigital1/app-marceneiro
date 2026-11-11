@@ -3,7 +3,7 @@
 // livre: false → o código do vídeo só é entregue pelo servidor depois da senha de desbloqueio.
 export type Video = { id: string; youtubeId: string; titulo: string; descricao?: string; livre: boolean; canal: string; tema: Tema };
 
-export const TEMAS = ["Ideias que vendem", "Encaixes de canto", "Ferramentas e gabaritos", "Móveis e projetos", "Telhado e estrutura"] as const;
+export const TEMAS = ["Encaixes de canto", "Ideias que vendem", "Ferramentas e gabaritos", "Móveis e projetos", "Telhado e estrutura"] as const;
 export type Tema = (typeof TEMAS)[number];
 
 const v = (youtubeId: string, tema: Tema, canal: string, titulo: string): Video => ({
@@ -12,7 +12,8 @@ const v = (youtubeId: string, tema: Tema, canal: string, titulo: string): Video 
   tema,
   canal,
   titulo,
-  livre: true,
+  // vitrine: "Encaixes de canto" fica aberto; os outros temas só com a senha de desbloqueio
+  livre: tema === "Encaixes de canto",
 });
 
 const WP = "Woodworker Plus";
@@ -20,6 +21,27 @@ const WC = "Wood Creation";
 const TW = "Top Wood Tips";
 
 export const VIDEOS: Video[] = [
+  // Encaixes de canto
+  v("8Qbi5xswHiI", "Encaixes de canto", WC, "5 encaixes de canto — parte 1"),
+  v("in2vgS3gRCk", "Encaixes de canto", WC, "5 encaixes de canto — parte 2"),
+  v("Rshrzm3kqO4", "Encaixes de canto", WC, "5 encaixes de canto — parte 3"),
+  v("cOK2fcvCvUc", "Encaixes de canto", WC, "5 encaixes de canto — parte 4"),
+  v("U2C1gFc40Io", "Encaixes de canto", WC, "5 encaixes de canto — parte 5"),
+  v("p_R6SgZm028", "Encaixes de canto", WC, "5 encaixes de canto — parte 6"),
+  v("8_KYqc06hGY", "Encaixes de canto", WC, "Dicas de encaixe de canto"),
+  v("WVFuyOIGeq8", "Encaixes de canto", WC, "Encaixe de canto bem resolvido"),
+  v("sEFgT76jpRA", "Encaixes de canto", WC, "5 técnicas de encaixe de canto"),
+  v("OIgnDZWQFY8", "Encaixes de canto", WC, "Encaixe de canto sem folga"),
+  v("xmnDy8esZIM", "Encaixes de canto", WC, "5 técnicas de encaixe — mestre marceneiro"),
+  v("P3f3u6Y0-Bo", "Encaixes de canto", WC, "5 ideias de encaixe de canto"),
+  v("uIcdN5ceMpw", "Encaixes de canto", WC, "5 encaixes de canto criativos"),
+  v("xKRPHYhH57s", "Encaixes de canto", WC, "5 técnicas de encaixe pouco vistas"),
+  v("DIMjSiJPUVM", "Encaixes de canto", WC, "Encaixe de canto pouco conhecido"),
+  v("u2WB7fzELrc", "Encaixes de canto", WC, "Técnica de encaixe de canto diferente"),
+  v("xUCDg8-R1a8", "Encaixes de canto", WC, "Encaixe de canto engenhoso"),
+  v("LkKdnFTNSaU", "Encaixes de canto", TW, "Encaixe de canto perfeito"),
+  v("4LvueT54InM", "Encaixes de canto", TW, "Encaixes de canto de mestre marceneiro"),
+
   // Ideias que vendem
   v("pm_6VxX_jkU", "Ideias que vendem", WP, "Mesa tensegrity: a peça que parece flutuar"),
   v("o_DA7AWW3IU", "Ideias que vendem", WP, "Mesa tensegrity sextavada"),
@@ -45,27 +67,6 @@ export const VIDEOS: Video[] = [
   v("OnVPoL_YCZg", "Ferramentas e gabaritos", "Grant", "Gabarito de tupia para aplainar tampos"),
   v("hINZ9uIvfJU", "Ferramentas e gabaritos", TW, "Técnica esperta de marcenaria para testar"),
   v("UYTeXrURYNg", "Ferramentas e gabaritos", TW, "Ideias de projeto de um mestre marceneiro"),
-
-  // Encaixes de canto
-  v("8Qbi5xswHiI", "Encaixes de canto", WC, "5 encaixes de canto — parte 1"),
-  v("in2vgS3gRCk", "Encaixes de canto", WC, "5 encaixes de canto — parte 2"),
-  v("Rshrzm3kqO4", "Encaixes de canto", WC, "5 encaixes de canto — parte 3"),
-  v("cOK2fcvCvUc", "Encaixes de canto", WC, "5 encaixes de canto — parte 4"),
-  v("U2C1gFc40Io", "Encaixes de canto", WC, "5 encaixes de canto — parte 5"),
-  v("p_R6SgZm028", "Encaixes de canto", WC, "5 encaixes de canto — parte 6"),
-  v("8_KYqc06hGY", "Encaixes de canto", WC, "Dicas de encaixe de canto"),
-  v("WVFuyOIGeq8", "Encaixes de canto", WC, "Encaixe de canto bem resolvido"),
-  v("sEFgT76jpRA", "Encaixes de canto", WC, "5 técnicas de encaixe de canto"),
-  v("OIgnDZWQFY8", "Encaixes de canto", WC, "Encaixe de canto sem folga"),
-  v("xmnDy8esZIM", "Encaixes de canto", WC, "5 técnicas de encaixe — mestre marceneiro"),
-  v("P3f3u6Y0-Bo", "Encaixes de canto", WC, "5 ideias de encaixe de canto"),
-  v("uIcdN5ceMpw", "Encaixes de canto", WC, "5 encaixes de canto criativos"),
-  v("xKRPHYhH57s", "Encaixes de canto", WC, "5 técnicas de encaixe pouco vistas"),
-  v("DIMjSiJPUVM", "Encaixes de canto", WC, "Encaixe de canto pouco conhecido"),
-  v("u2WB7fzELrc", "Encaixes de canto", WC, "Técnica de encaixe de canto diferente"),
-  v("xUCDg8-R1a8", "Encaixes de canto", WC, "Encaixe de canto engenhoso"),
-  v("LkKdnFTNSaU", "Encaixes de canto", TW, "Encaixe de canto perfeito"),
-  v("4LvueT54InM", "Encaixes de canto", TW, "Encaixes de canto de mestre marceneiro"),
 
   // Telhado e estrutura
   v("0crKwLLDOv8", "Telhado e estrutura", TW, "Tesoura de telhado com esquadro"),

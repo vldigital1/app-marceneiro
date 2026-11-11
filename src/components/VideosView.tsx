@@ -74,12 +74,13 @@ export function VideosView({ videos, temas }: { videos: VideoPublico[]; temas: s
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={`https://i.ytimg.com/vi/${v.youtubeId}/mqdefault.jpg`} alt="" loading="lazy" className="h-full w-full object-cover" draggable={false} />
                   ) : (
-                    <span className="flex h-full items-center justify-center text-lg">{liberado ? "▶" : "🔒"}</span>
+                    <span className="flex h-full items-center justify-center bg-gradient-to-br from-wood-200 to-wood-400 text-xl">{liberado ? "▶" : "🔒"}</span>
                   )}
                 </span>
                 <span className="min-w-0">
                   <span className="line-clamp-2 block text-sm font-semibold text-bark-900">{v.titulo}</span>
                   <span className="mt-0.5 block text-xs text-bark-500">
+                    {!v.livre && !liberado && <strong className="text-wood-600">🔒 Exclusivo · </strong>}
                     {v.tema}
                   </span>
                 </span>
