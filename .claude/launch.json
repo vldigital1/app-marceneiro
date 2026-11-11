@@ -1,0 +1,8 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "app-completo", "runtimeExecutable": "node", "runtimeArgs": ["scripts/servidor-local.mjs"], "port": 4174, "url": "http://localhost:4174" },
+    { "name": "teste-vercel", "runtimeExecutable": "npx", "runtimeArgs": ["cross-env", "VERCEL=1", "SENHAS=TESTE-VERCEL-1", "SEGREDO=segredo-de-teste-local-com-mais-de-24-chars", "next", "start", "-p", "4176"], "port": 4176 },
+    { "name": "site-estatico", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "4173", "--directory", "out"], "port": 4173 }
+  ]
+}

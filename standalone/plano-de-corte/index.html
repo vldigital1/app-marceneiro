@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plano de Corte — otimizador de chapa 2750 × 1830</title>
+<meta name="description" content="Calcule o melhor arranjo das peças na chapa de MDF 2750 × 1830 mm, com espessura da serra, refilo e aproveitamento." />
+<meta name="theme-color" content="#1a120c" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Zilla+Slab:wght@700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bark-950: #1a120c; --bark-900: #24180f; --bark-800: #33241a; --bark-700: #4a3526; --bark-600: #6b4d36; --bark-500: #8a6a50;
+    --wood-50: #fbf6ee; --wood-100: #f5ead8; --wood-200: #ead5b3; --wood-300: #dcb883; --wood-400: #cd9a54; --wood-500: #b97f35; --wood-600: #9a6528;
+    --leaf-600: #2f7d4a; --leaf-700: #25663c; --paper: #faf6ef; --danger: #b4432f;
+    --shadow: 0 1px 2px rgb(36 24 15 / .06), 0 4px 16px rgb(36 24 15 / .06);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--bark-900); font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: "Zilla Slab", Georgia, serif; font-weight: 700; line-height: 1.15; margin: 0; }
+  header { background: var(--bark-900); background-image: repeating-linear-gradient(172deg, rgb(255 255 255 / .025) 0 2px, transparent 2px 9px, rgb(0 0 0 / .05) 9px 10px, transparent 10px 23px), radial-gradient(ellipse at 20% 0%, rgb(205 154 84 / .18), transparent 60%); color: var(--wood-50); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  .top { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: "Zilla Slab", serif; font-size: 20px; font-weight: 700; color: var(--wood-50); text-decoration: none; }
+  .top a.back { color: var(--wood-200); font-size: 14px; text-decoration: none; }
+  .hero { padding: 28px 0 32px; }
+  .hero h1 { font-size: clamp(28px, 4vw, 40px); }
+  .hero p { color: rgb(245 234 216 / .82); max-width: 720px; margin: 8px 0 0; }
+  main { padding: 28px 0 60px; }
+  .grid { display: grid; gap: 24px; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: #fff; border: 1px solid rgb(36 24 15 / .1); border-radius: 12px; box-shadow: var(--shadow); padding: 16px; }
+  .card + .card { margin-top: 16px; }
+  .card h2 { font-size: 20px; margin-bottom: 12px; }
+  label.l { display: block; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--bark-700); margin-bottom: 4px; }
+  input[type=text], input[type=number], select { width: 100%; border: 1px solid rgb(36 24 15 / .2); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: #fff; color: var(--bark-900); }
+  input:focus, select:focus { outline: none; border-color: var(--wood-500); box-shadow: 0 0 0 3px rgb(205 154 84 / .25); }
+  .sheet-fields { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 560px) { .sheet-fields { grid-template-columns: repeat(2, 1fr); } }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { border: 1px solid rgb(36 24 15 / .15); background: var(--wood-50); border-radius: 999px; padding: 4px 10px; font-size: 12px; cursor: pointer; color: var(--bark-800); }
+  .chip:hover { border-color: var(--wood-400); }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--bark-600); text-align: left; padding: 0 4px 6px; font-weight: 600; }
+  td { padding: 3px 4px; vertical-align: middle; }
+  td.n input { width: 100%; min-width: 60px; }
+  td.q input { width: 58px; }
+  td.c { text-align: center; }
+  input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--leaf-600); }
+  .del { border: 0; background: none; color: var(--bark-500); cursor: pointer; font-size: 16px; border-radius: 6px; padding: 4px 8px; }
+  .del:hover { background: #fdecea; color: var(--danger); }
+  .btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; padding: 9px 14px; font: 600 14px Inter, sans-serif; cursor: pointer; border: 1px solid rgb(36 24 15 / .15); background: #fff; color: var(--bark-900); transition: background .15s, transform .15s; }
+  .btn:hover { background: var(--wood-50); transform: translateY(-1px); }
+  .btn.cta { background: var(--leaf-600); color: #fff; border-color: transparent; }
+  .btn.cta:hover { background: var(--leaf-700); }
+  .hint { font-size: 12px; color: var(--bark-600); margin-top: 8px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat { background: var(--bark-900); color: var(--wood-50); border-radius: 12px; padding: 14px; text-align: center; }
+  .stat b { display: block; font-family: "Zilla Slab", serif; font-size: 30px; color: var(--wood-300); font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 12px; opacity: .75; }
+  .note { font-size: 12px; color: var(--bark-600); margin: 10px 0; }
+  .warn { background: #fdecea; border: 1px solid rgb(180 67 47 / .3); color: var(--danger); border-radius: 8px; padding: 10px; font-size: 14px; margin: 10px 0; }
+  figure { margin: 0 0 16px; opacity: 0; transform: translateY(8px); animation: in .25s ease-out forwards; }
+  @keyframes in { to { opacity: 1; transform: none; } }
+  figcaption { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
+  svg.sheet { width: 100%; height: auto; border-radius: 6px; border: 1px solid rgb(36 24 15 / .2); background: repeating-linear-gradient(45deg, #f5ead8 0 14px, #fbf6ee 14px 28px); }
+  .loaded { background: var(--wood-100); border: 1px solid rgb(205 154 84 / .5); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; font-size: 14px; }
+  .loaded select { margin-top: 8px; }
+  .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 4px 12px; font-size: 12px; margin-top: 8px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; border: 1px solid #74481a; }
+  footer { color: var(--bark-600); font-size: 12px; text-align: center; padding: 24px 16px 40px; }
+  @media (prefers-reduced-motion: reduce) { figure { animation: none; opacity: 1; transform: none; } .btn:hover { transform: none; } }
+  @media print {
+    header .hero, .no-print, footer { display: none !important; }
+    body { background: #fff; }
+    .grid { grid-template-columns: 1fr; }
+    figure { break-inside: avoid; opacity: 1; transform: none; animation: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <a class="logo" href="../" aria-label="Voltar ao site">
+      <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="6" fill="#cd9a54"/><path d="M7 11c5-2 13-2 18 0M7 16c5-2 13-2 18 0M7 21c5-2 13-2 18 0" stroke="#33241a" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M9 26 L23 6" stroke="#fbf6ee" stroke-width="2.2" stroke-linecap="round"/></svg>
+      Plano de Corte
+    </a>
+    <a class="back no-print" href="../catalogo/">Ver projetos →</a>
+  </div>
+  <div class="wrap hero">
+    <h1>Otimizador de plano de corte</h1>
+    <p>Informe as peças e veja o melhor arranjo na chapa. Desconta a espessura da serra e o refilo das bordas e mostra quanto da chapa você aproveita. Tudo roda no seu navegador.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <section>
+      <div id="loaded" class="loaded" hidden></div>
+
+      <div class="card no-print-inputs">
+        <h2>Chapa</h2>
+        <div class="sheet-fields">
+          <div><label class="l" for="sL">Comprimento (mm)</label><input id="sL" type="number" inputmode="numeric" value="2750" /></div>
+          <div><label class="l" for="sW">Largura (mm)</label><input id="sW" type="number" inputmode="numeric" value="1830" /></div>
+          <div><label class="l" for="sK">Serra / kerf (mm)</label><input id="sK" type="number" inputmode="numeric" value="4" /></div>
+          <div><label class="l" for="sT">Refilo (mm)</label><input id="sT" type="number" inputmode="numeric" value="10" /></div>
+        </div>
+        <div class="presets no-print" aria-label="Chapas comuns">
+          <button class="chip" data-sheet="2750,1830">MDF 2750 × 1830</button>
+          <button class="chip" data-sheet="2750,1850">MDF 2750 × 1850</button>
+          <button class="chip" data-sheet="2440,1220">Compensado 2440 × 1220</button>
+          <button class="chip" data-sheet="2200,1600">Compensado 2200 × 1600</button>
+          <button class="chip" data-sheet="2440,1830">OSB 2440 × 1830</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Peças</h2>
+        <table>
+          <thead><tr><th>Nome</th><th>Qtd</th><th>Compr.</th><th>Larg.</th><th title="Pode girar a peça (desmarque em MDF com padrão de veio)">Girar</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div class="btns no-print">
+          <button class="btn" id="add">+ Adicionar peça</button>
+          <button class="btn" id="clear">Limpar</button>
+          <button class="btn" id="example">Exemplo</button>
+          <button class="btn" id="csv">Copiar lista (CSV)</button>
+          <button class="btn cta" id="print">Imprimir plano</button>
+        </div>
+        <p class="hint">Desmarque <b>girar</b> em peças de MDF com padrão amadeirado: o veio precisa seguir o comprimento da peça. As peças ficam salvas neste navegador.</p>
+      </div>
+    </section>
+
+    <section aria-live="polite">
+      <div class="stats">
+        <div class="stat"><b id="kSheets">0</b><span>Chapas</span></div>
+        <div class="stat"><b id="kUse">0%</b><span>Aproveitamento</span></div>
+        <div class="stat"><b id="kPieces">0</b><span>Peças</span></div>
+      </div>
+      <p class="note" id="areaNote"></p>
+      <div id="unplaced"></div>
+      <div id="sheets"></div>
+    </section>
+  </div>
+</main>
+
+<footer>Plano de Corte · as medidas são das peças acabadas, em milímetros. Confira na loja de chapas o tamanho exato da chapa antes de cortar.</footer>
+
+<script>
+(() => {
+  "use strict";
+  // ─────────── Otimizador MaxRects (Best Short Side Fit), várias chapas ───────────
+  function pack(pieces, sheet) {
+    const uL = sheet.length - 2 * sheet.trim, uW = sheet.width - 2 * sheet.trim;
+    const exp = [];
+    pieces.forEach((p) => { for (let i = 0; i < Math.max(0, Math.floor(p.quantity)); i++) if (p.length > 0 && p.width > 0) exp.push(p); });
+    exp.sort((a, b) => b.length * b.width - a.length * a.width || Math.max(b.length, b.width) - Math.max(a.length, a.width));
+    const bins = [], unplaced = [];
+    const newBin = () => ({ free: [{ x: 0, y: 0, w: uL + sheet.kerf, h: uW + sheet.kerf }], placements: [], used: 0 });
+    const find = (bin, w, h, rot) => {
+      let best = null;
+      for (const f of bin.free) {
+        const tries = [[w, h, false]];
+        if (rot && w !== h) tries.push([h, w, true]);
+        for (const [tw, th, r] of tries) if (tw <= f.w && th <= f.h) {
+          const a = Math.min(f.w - tw, f.h - th), b = Math.max(f.w - tw, f.h - th);
+          if (!best || a < best.s || (a === best.s && b < best.s2)) best = { x: f.x, y: f.y, w: tw, h: th, r, s: a, s2: b };
+        }
+      }
+      return best;
+    };
+    const place = (bin, r) => {
+      const next = [];
+      for (const f of bin.free) {
+        if (r.x >= f.x + f.w || r.x + r.w <= f.x || r.y >= f.y + f.h || r.y + r.h <= f.y) { next.push(f); continue; }
+        if (r.x > f.x) next.push({ x: f.x, y: f.y, w: r.x - f.x, h: f.h });
+        if (r.x + r.w < f.x + f.w) next.push({ x: r.x + r.w, y: f.y, w: f.x + f.w - r.x - r.w, h: f.h });
+        if (r.y > f.y) next.push({ x: f.x, y: f.y, w: f.w, h: r.y - f.y });
+        if (r.y + r.h < f.y + f.h) next.push({ x: f.x, y: r.y + r.h, w: f.w, h: f.y + f.h - r.y - r.h });
+      }
+      bin.free = next.filter((a, i) => a.w > 0 && a.h > 0 && !next.some((b, j) => i !== j && a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h && (j < i || a.x !== b.x || a.y !== b.y || a.w !== b.w || a.h !== b.h)));
+    };
+    for (const p of exp) {
+      const w = p.length + sheet.kerf, h = p.width + sheet.kerf;
+      const fits = (w <= uL + sheet.kerf && h <= uW + sheet.kerf) || (p.canRotate && h <= uL + sheet.kerf && w <= uW + sheet.kerf);
+      if (!fits) { unplaced.push(p); continue; }
+      let chosen = null;
+      for (const bin of bins) { const hit = find(bin, w, h, p.canRotate); if (hit && (!chosen || hit.s < chosen.hit.s)) chosen = { bin, hit }; }
+      if (!chosen) { const bin = newBin(); bins.push(bin); chosen = { bin, hit: find(bin, w, h, p.canRotate) }; }
+      place(chosen.bin, chosen.hit);
+      chosen.bin.placements.push({ id: p.id, name: p.name, x: chosen.hit.x + sheet.trim, y: chosen.hit.y + sheet.trim, length: chosen.hit.r ? p.width : p.length, width: chosen.hit.r ? p.length : p.width, rotated: chosen.hit.r });
+      chosen.bin.used += p.length * p.width;
+    }
+    const usable = uL * uW;
+    const sheets = bins.map((b) => ({ placements: b.placements, utilization: b.used / usable }));
+    const used = bins.reduce((s, b) => s + b.used, 0);
+    return { sheets, unplaced, total: exp.length, utilization: sheets.length ? used / (usable * sheets.length) : 0 };
+  }
+
+  // ─────────── Estado ───────────
+  const KEY = "plano-de-corte:v1";
+  const COLORS = ["#e8bf82", "#dcb883", "#cd9a54", "#ead5b3", "#d9a86a", "#f1dcb4", "#c9a56a", "#e3b77a", "#bfa07a", "#e6c79a"];
+  const EXAMPLE = [["Lateral", 2, 1000, 300, 1], ["Prateleira", 4, 470, 280, 1], ["Porta", 2, 700, 400, 0], ["Tampo", 1, 800, 350, 1]];
+  let seq = 0;
+  const mk = (r) => ({ id: "p" + ++seq, name: r[0], quantity: +r[1], length: +r[2], width: +r[3], canRotate: !!r[4] });
+  let rows = [];
+  let loaded = null; // { t: título, g: [{ m: material, p: [[nome,qtd,c,l,girar]] }] }
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const num = (v) => Math.max(0, Math.round(Number(v) || 0));
+  const sheet = () => ({ length: num($("sL").value), width: num($("sW").value), kerf: num($("sK").value), trim: num($("sT").value) });
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify({ rows: rows.map((r) => [r.name, r.quantity, r.length, r.width, r.canRotate ? 1 : 0]), sheet: sheet() })); } catch (e) {}
+  }
+  function restore() {
+    try {
+      const s = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (!s) return false;
+      rows = s.rows.map(mk);
+      if (s.sheet) { $("sL").value = s.sheet.length; $("sW").value = s.sheet.width; $("sK").value = s.sheet.kerf; $("sT").value = s.sheet.trim; }
+      return rows.length > 0;
+    } catch (e) { return false; }
+  }
+
+  // peças vindas de um projeto: #d=<json>
+  function fromHash() {
+    const m = location.hash.match(/[#&]d=([^&]+)/);
+    if (!m) return false;
+    try {
+      loaded = JSON.parse(decodeURIComponent(m[1]));
+      if (!loaded || !Array.isArray(loaded.g) || !loaded.g.length) return false;
+      showLoaded(0);
+      return true;
+    } catch (e) { return false; }
+  }
+  function showLoaded(idx) {
+    const box = $("loaded");
+    box.hidden = false;
+    box.innerHTML = `Peças carregadas do projeto <b>${esc(loaded.t || "")}</b>.` + (loaded.g.length > 1 ? `<label class="l" for="grp" style="margin-top:8px">Chapa</label><select id="grp">${loaded.g.map((g, i) => `<option value="${i}" ${i === idx ? "selected" : ""}>${esc(g.m)}</option>`).join("")}</select>` : ` <span style="color:var(--bark-600)">(${esc(loaded.g[0].m)})</span>`);
+    rows = loaded.g[idx].p.map(mk);
+    const sel = $("grp");
+    if (sel) sel.onchange = () => { showLoaded(+sel.value); renderRows(); calc(); };
+  }
+
+  // ─────────── Tabela ───────────
+  function renderRows() {
+    $("rows").innerHTML = rows.map((r) => `<tr data-id="${r.id}">
+      <td class="n"><input type="text" aria-label="Nome da peça" data-k="name" value="${esc(r.name)}"></td>
+      <td class="q"><input type="number" aria-label="Quantidade" data-k="quantity" value="${r.quantity}"></td>
+      <td class="q"><input type="number" aria-label="Comprimento em mm" data-k="length" value="${r.length}" style="width:76px"></td>
+      <td class="q"><input type="number" aria-label="Largura em mm" data-k="width" value="${r.width}" style="width:76px"></td>
+      <td class="c"><input type="checkbox" aria-label="Pode girar" data-k="canRotate" ${r.canRotate ? "checked" : ""}></td>
+      <td><button class="del" aria-label="Remover ${esc(r.name)}">✕</button></td></tr>`).join("");
+  }
+  $("rows").addEventListener("input", (e) => {
+    const tr = e.target.closest("tr"); if (!tr) return;
+    const r = rows.find((x) => x.id === tr.dataset.id); const k = e.target.dataset.k;
+    if (!r || !k) return;
+    r[k] = k === "name" ? e.target.value : k === "canRotate" ? e.target.checked : num(e.target.value);
+    calc();
+  });
+  $("rows").addEventListener("click", (e) => {
+    if (!e.target.classList.contains("del")) return;
+    const id = e.target.closest("tr").dataset.id;
+    rows = rows.filter((x) => x.id !== id); renderRows(); calc();
+  });
+  $("add").onclick = () => { rows.push(mk([`Peça ${rows.length + 1}`, 1, 500, 300, 1])); renderRows(); calc(); const ins = $("rows").querySelectorAll('input[data-k="name"]'); ins[ins.length - 1]?.focus(); };
+  $("clear").onclick = () => { rows = []; renderRows(); calc(); };
+  $("example").onclick = () => { rows = EXAMPLE.map(mk); renderRows(); calc(); };
+  $("print").onclick = () => window.print();
+  $("csv").onclick = async () => {
+    const csv = ["peça;qtd;comprimento;largura;girar", ...rows.map((r) => `${r.name};${r.quantity};${r.length};${r.width};${r.canRotate ? "sim" : "não"}`)].join("\n");
+    try { await navigator.clipboard.writeText(csv); $("csv").textContent = "Copiado ✓"; } catch (e) { prompt("Copie a lista:", csv); }
+    setTimeout(() => ($("csv").textContent = "Copiar lista (CSV)"), 1500);
+  };
+  ["sL", "sW", "sK", "sT"].forEach((id) => $(id).addEventListener("input", calc));
+  document.querySelectorAll("[data-sheet]").forEach((b) => b.addEventListener("click", () => { const [l, w] = b.dataset.sheet.split(","); $("sL").value = l; $("sW").value = w; calc(); }));
+
+  // ─────────── Resultado ───────────
+  let timer;
+  function calc() { clearTimeout(timer); timer = setTimeout(draw, 60); save(); }
+  function draw() {
+    const s = sheet();
+    const res = pack(rows, s);
+    const colorOf = new Map(rows.map((r, i) => [r.id, COLORS[i % COLORS.length]]));
+    $("kSheets").textContent = res.sheets.length;
+    $("kUse").textContent = Math.round(res.utilization * 100) + "%";
+    $("kPieces").textContent = res.total;
+    const area = rows.reduce((t, r) => t + r.length * r.width * r.quantity, 0) / 1e6;
+    $("areaNote").textContent = `Área das peças: ${area.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} m² · chapa: ${((s.length * s.width) / 1e6).toLocaleString("pt-BR", { maximumFractionDigits: 2 })} m². Reserva ${s.kerf} mm de serra entre peças e ${s.trim} mm de refilo em cada borda.`;
+    $("unplaced").innerHTML = res.unplaced.length ? `<div class="warn">Não cabem na chapa: ${res.unplaced.map((u) => `${esc(u.name)} (${u.length}×${u.width})`).join(", ")}.</div>` : "";
+    $("sheets").innerHTML = res.sheets.map((sh, i) => {
+      const rects = sh.placements.map((p) => {
+        const fs = Math.max(26, Math.min(58, Math.min(p.length, p.width) / 4));
+        const txt = p.length > 160 && p.width > 70 ? `<text x="${p.x + p.length / 2}" y="${p.y + p.width / 2 - fs * 0.15}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#24180f" font-family="Inter,Arial">${esc(p.name.length > 22 ? p.name.slice(0, 21) + "…" : p.name)}</text><text x="${p.x + p.length / 2}" y="${p.y + p.width / 2 + fs * 0.95}" text-anchor="middle" font-size="${fs * 0.8}" fill="#4a3526" font-family="Inter,Arial">${p.rotated ? `${p.width}×${p.length} ↻` : `${p.length}×${p.width}`}</text>` : "";
+        return `<g><title>${esc(p.name)}: ${p.rotated ? p.width + " × " + p.length + " (girada)" : p.length + " × " + p.width} mm</title><rect x="${p.x}" y="${p.y}" width="${p.length}" height="${p.width}" fill="${colorOf.get(p.id)}" stroke="#74481a" stroke-width="3"/>${txt}</g>`;
+      }).join("");
+      return `<figure class="card" style="animation-delay:${Math.min(i * 50, 200)}ms"><figcaption><b>Chapa ${i + 1}</b><span>${sh.placements.length} peças · aproveitamento <b>${Math.round(sh.utilization * 100)}%</b></span></figcaption>
+        <svg class="sheet" viewBox="0 0 ${s.length} ${s.width}" role="img" aria-label="Plano de corte da chapa ${i + 1}"><rect x="0" y="0" width="${s.length}" height="${s.width}" fill="none" stroke="#6b4d36" stroke-width="6"/>${rects}</svg></figure>`;
+    }).join("") + (rows.length ? `<div class="card"><b>Legenda</b><div class="legend">${rows.map((r) => `<span><i style="background:${colorOf.get(r.id)}"></i>${esc(r.name)} ×${r.quantity} — ${r.length}×${r.width}</span>`).join("")}</div></div>` : `<div class="card" style="text-align:center;color:var(--bark-600)">Adicione peças para ver o plano de corte.</div>`);
+  }
+
+  // ─────────── Início ───────────
+  if (!fromHash() && !restore()) rows = EXAMPLE.map(mk);
+  renderRows();
+  draw();
+  window.addEventListener("hashchange", () => { if (fromHash()) { renderRows(); draw(); } });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "oficina-de-projetos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "tsx scripts/build-assets.tsx && next build && tsx scripts/pack-hostinger.ts",
+    "build:projeto": "cross-env BASE_PATH=/projeto npm run build",
+    "build:vercel": "tsx scripts/build-assets.tsx && next build",
+    "lint": "tsc --noEmit",
+    "pdfs": "tsx scripts/build-assets.tsx",
+    "prompts": "tsx scripts/export-prompts.ts"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^4.9.0",
+    "framer-motion": "^13.4.2",
+    "next": "^16.3.6",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^24.13.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "cross-env": "^10.1.0",
+    "fflate": "^0.8.3",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}
