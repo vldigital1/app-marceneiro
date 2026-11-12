@@ -9,7 +9,7 @@ const vercel = Boolean(process.env.VERCEL);
 const basePath = vercel ? "" : (process.env.BASE_PATH ?? "").replace(/\/$/, "");
 
 // domínios autorizados (proteção contra cópia)
-const OFICIAIS = ["appmarceneiro.online", "www.appmarceneiro.online", "loja.appmarceneiro.online"];
+const OFICIAIS = ["appmarceneiro.online", "www.appmarceneiro.online", "loja.appmarceneiro.online", "app-marceneiro-beta.vercel.app", "app-marceneiro-icsj.vercel.app"];
 const dominiosArquivo = existsSync("config-servidor.json") ? (JSON.parse(readFileSync("config-servidor.json", "utf8")).dominios as string[]) : [];
 const dominiosVercel = [OFICIAIS.join(","), process.env.VERCEL_ENV ? "" : "localhost,127.0.0.1", process.env.DOMINIOS ?? "", process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "", process.env.VERCEL_URL ?? "", process.env.VERCEL_BRANCH_URL ?? ""]
   .flatMap((d) => d.split(","))
