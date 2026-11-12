@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { withBase } from "@/lib/base";
+import { LOJA } from "@/lib/loja";
 
 const P = { fill: "none", stroke: "currentColor", strokeWidth: 1.9, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 const ICONES: Record<string, React.ReactNode> = {
@@ -56,7 +57,8 @@ const MAIS = [
   { href: "/plano-de-corte/", label: "Plano de corte", plain: true },
   { href: "/membro/", label: "Minha oficina" },
   { href: "/blog/", label: "Dicas e técnicas" },
-  { href: "/oferta/#pix", label: "Desbloquear tudo", destaque: true },
+  { href: "/privacidade/", label: "Privacidade" },
+  LOJA ? { href: "/membro/", label: "Já tenho acesso", destaque: true } : { href: "/oferta/#pix", label: "Desbloquear tudo", destaque: true },
 ];
 
 export function BottomNav() {

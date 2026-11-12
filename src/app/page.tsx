@@ -6,6 +6,7 @@ import { SeloSabado } from "@/components/SeloSabado";
 import { getCards, getPosts, getStats } from "@/data";
 import { withBase } from "@/lib/base";
 import { CATEGORIES } from "@/lib/taxonomy";
+import { LOJA } from "@/lib/loja";
 
 const CAT_ICON: Record<string, string> = {
   quarto: "🛏️",
@@ -93,7 +94,9 @@ export default function Home() {
           {[
             { href: "/configurador/", kicker: "Projetos dinâmicos", titulo: "Monte sob medida", texto: "Mude medidas, cores, portas e prateleiras e veja o móvel em 3D com lista de corte e ferragens na hora." },
             { href: "/aulas/", kicker: "Curso com pontos", titulo: "Aulas do marceneiro", texto: "7 módulos curtos com checagem rápida no fim de cada tópico. Cada acerto soma pontos no seu placar do dia." },
-            { href: "/oferta/#pix", kicker: "App completo", titulo: "Desbloqueie tudo", texto: "Pague via PIX, receba a senha no WhatsApp e libere todas as aulas, projetos exclusivos e PDFs." },
+            LOJA
+              ? { href: "/catalogo/", kicker: "Catálogo", titulo: "Projetos prontos", texto: "Projetos com imagem 3D, medidas, lista de corte e montagem passo a passo. Todo sábado tem projeto novo." }
+              : { href: "/oferta/#pix", kicker: "App completo", titulo: "Desbloqueie tudo", texto: "Pague via PIX, receba a senha no WhatsApp e libere todas as aulas, projetos exclusivos e PDFs." },
           ].map((c) => (
             <Link key={c.href} href={c.href} className="app-card group p-6 transition-transform hover:-translate-y-1">
               <p className="app-kicker">{c.kicker}</p>
@@ -202,10 +205,10 @@ export default function Home() {
       {/* CTA */}
       <section className="container-page pt-16">
         <div className="wood-grain rounded-2xl p-10 text-center text-wood-50">
-          <h2 className="text-3xl">Todos os projetos em PDF, para imprimir e levar para a oficina</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-wood-100/80">Acesso a todo o catálogo, às atualizações e ao plano de corte.</p>
-          <Link href="/oferta/" className="btn-cta mt-6 px-8 py-3 text-base">
-            Liberar o app completo
+          <h2 className="text-3xl">{LOJA ? "Projetos prontos para levar para a oficina" : "Todos os projetos em PDF, para imprimir e levar para a oficina"}</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-wood-100/80">{LOJA ? "Catálogo, plano de corte, móveis sob medida e aulas, tudo no celular." : "Acesso a todo o catálogo, às atualizações e ao plano de corte."}</p>
+          <Link href={LOJA ? "/catalogo/" : "/oferta/"} className="btn-cta mt-6 px-8 py-3 text-base">
+            {LOJA ? "Ver os projetos" : "Liberar o app completo"}
           </Link>
         </div>
       </section>

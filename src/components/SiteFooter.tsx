@@ -3,6 +3,7 @@ import { CATEGORIES } from "@/lib/taxonomy";
 import { withBase } from "@/lib/base";
 import { site } from "@/lib/site";
 import { Logo } from "./Logo";
+import { LOJA } from "@/lib/loja";
 
 export function SiteFooter() {
   const cats = Object.entries(CATEGORIES).slice(0, 8);
@@ -37,8 +38,13 @@ export function SiteFooter() {
             <li>
               <Link href="/membro" className="hover:text-wood-50">Minha oficina</Link>
             </li>
+            {!LOJA && (
+              <li>
+                <Link href="/oferta" className="hover:text-wood-50">Planos e acesso</Link>
+              </li>
+            )}
             <li>
-              <Link href="/oferta" className="hover:text-wood-50">Planos e acesso</Link>
+              <Link href="/privacidade/" className="hover:text-wood-50">Política de privacidade</Link>
             </li>
           </ul>
         </div>

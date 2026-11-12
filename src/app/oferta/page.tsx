@@ -6,6 +6,8 @@ import { PixCard } from "@/components/PixCard";
 import { benefits, faq, guaranteeDays, testimonials } from "@/content/oferta";
 import { getCards, getStats } from "@/data";
 import { CATEGORIES, label } from "@/lib/taxonomy";
+import { LOJA } from "@/lib/loja";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Acesso ao catálogo de projetos",
@@ -36,6 +38,7 @@ function PdfMockup({ title, img, className = "" }: { title: string; img?: string
 }
 
 export default function OfertaPage() {
+  if (LOJA) notFound();
   const stats = getStats();
   const cards = getCards();
   const gallery = cards.filter((c) => c.featured).slice(0, 8);

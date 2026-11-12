@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useAcesso } from "@/lib/acesso";
 import { PixCard } from "./PixCard";
+import { LOJA } from "@/lib/loja";
 
 /** Cadeado + campo de senha + PIX. Some sozinho quando o acesso é liberado. */
 export function UnlockBox({ titulo = "Conteúdo exclusivo", texto, dark = false }: { titulo?: string; texto?: string; dark?: boolean }) {
@@ -35,7 +36,7 @@ export function UnlockBox({ titulo = "Conteúdo exclusivo", texto, dark = false 
         </span>
         <div>
           <h3 className={`font-display text-xl ${dark ? "text-bark-900" : "text-bark-900"}`}>{titulo}</h3>
-          <p className={`mt-1 text-sm ${dark ? "text-bark-700" : "text-bark-700"}`}>{texto ?? "Digite a senha de desbloqueio que você recebeu no WhatsApp para liberar todas as aulas e todos os projetos."}</p>
+          <p className={`mt-1 text-sm ${dark ? "text-bark-700" : "text-bark-700"}`}>{LOJA ? "Conteúdo exclusivo para quem tem acesso ao App do Marceneiro. Já tem acesso? Digite sua senha." : (texto ?? "Digite a senha de desbloqueio que você recebeu no WhatsApp para liberar todas as aulas e todos os projetos.")}</p>
         </div>
       </div>
 
@@ -69,8 +70,12 @@ export function UnlockBox({ titulo = "Conteúdo exclusivo", texto, dark = false 
         )}
       </AnimatePresence>
 
-      <p className={`mt-5 mb-3 text-center text-sm font-semibold ${dark ? "text-wood-600" : "text-bark-800"}`}>Ainda não tem a senha? Efetue o pagamento PIX para receber a senha de desbloqueio.</p>
-      <PixCard compact />
+      {!LOJA && (
+        <>
+          <p className={`mt-5 mb-3 text-center text-sm font-semibold ${dark ? "text-wood-600" : "text-bark-800"}`}>Ainda não tem a senha? Efetue o pagamento PIX para receber a senha de desbloqueio.</p>
+          <PixCard compact />
+        </>
+      )}
     </div>
   );
 }

@@ -1,22 +1,29 @@
 {
+  "id": "/",
   "name": "App do Marceneiro",
   "short_name": "Marceneiro",
+  "categories": [
+    "education",
+    "productivity",
+    "lifestyle"
+  ],
+  "orientation": "portrait",
   "description": "Catálogo de projetos de marcenaria com medidas, lista de material, lista de corte otimizada para chapa 2750 × 1830 mm e passo a passo de montagem.",
   "lang": "pt-BR",
-  "start_url": "/projeto/",
-  "scope": "/projeto/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#1a120c",
   "theme_color": "#1a120c",
   "icons": [
     {
-      "src": "/projeto/icone-192.png",
+      "src": "/icone-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/projeto/icone-512.png",
+      "src": "/icone-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

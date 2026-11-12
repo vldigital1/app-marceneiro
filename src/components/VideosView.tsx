@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { buscarBloqueado, useAcesso } from "@/lib/acesso";
 import { UnlockBox } from "./UnlockBox";
 import { VideoPlayer } from "./VideoPlayer";
+import { LOJA } from "@/lib/loja";
 
 export type VideoPublico = { id: string; titulo: string; descricao?: string; livre: boolean; youtubeId?: string; tema: string };
 
@@ -35,7 +36,25 @@ export function VideosView({ videos, temas }: { videos: VideoPublico[]; temas: s
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
       <div ref={topo} className="min-w-0 scroll-mt-16 space-y-2 lg:sticky lg:top-24">
-        {atual && (ytId ? <VideoPlayer key={ytId} youtubeId={ytId} titulo={atual.titulo} /> : <UnlockBox titulo="Vídeo exclusivo" />)}
+        {atual &&
+          (ytId ? (
+            LOJA ? (
+              <div className="aspect-video overflow-hidden rounded-2xl border border-bark-900/10 bg-black shadow-(--shadow-card)">
+                <iframe
+                  key={ytId}
+                  src={`https://www.youtube-nocookie.com/embed/${ytId}?rel=0&playsinline=1`}
+                  title={atual.titulo}
+                  className="h-full w-full"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ) : (
+              <VideoPlayer key={ytId} youtubeId={ytId} titulo={atual.titulo} />
+            )
+          ) : (
+            <UnlockBox titulo="Vídeo exclusivo" />
+          ))}
         {atual && (
           <div className="px-1">
             <h2 className="font-display text-xl text-bark-900">{atual.titulo}</h2>

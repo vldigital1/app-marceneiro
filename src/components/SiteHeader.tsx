@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { withBase } from "@/lib/base";
 import { Logo } from "./Logo";
+import { LOJA } from "@/lib/loja";
 
 // "Plano de corte" é uma página independente (standalone/plano-de-corte/index.html), por isso <a> comum
 const NAV = [
@@ -13,7 +14,7 @@ const NAV = [
   { href: "/videos", label: "Vídeos" },
   { href: "/plano-de-corte/", label: "Plano de corte", plain: true },
   { href: "/oferta", label: "Desbloquear" },
-];
+].filter((n) => !LOJA || n.href !== "/oferta");
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -49,8 +50,8 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <Link href="/oferta/#pix" className="rounded-full bg-wood-400 px-4 py-2 text-sm font-semibold text-bark-950 md:hidden">
-          Desbloquear
+        <Link href={LOJA ? "/membro/" : "/oferta/#pix"} className="rounded-full bg-wood-400 px-4 py-2 text-sm font-semibold text-bark-950 md:hidden">
+          {LOJA ? "Entrar" : "Desbloquear"}
         </Link>
       </div>
     </header>

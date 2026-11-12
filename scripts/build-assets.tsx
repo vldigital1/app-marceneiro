@@ -223,8 +223,28 @@ async function main() {
   writeFileSync(pub("icone-512.png"), logo(512));
   writeFileSync(
     pub("manifest.webmanifest"),
-    JSON.stringify({ name: site.name, short_name: "Marceneiro", description: site.description, lang: "pt-BR", start_url: `${base}/`, scope: `${base}/`, display: "standalone", background_color: "#1a120c", theme_color: "#1a120c", icons: [192, 512].map((n) => ({ src: `${base}/icone-${n}.png`, sizes: `${n}x${n}`, type: "image/png", purpose: "any maskable" })) }, null, 2),
+    JSON.stringify({ id: `${base}/`, name: site.name, short_name: "Marceneiro", categories: ["education", "productivity", "lifestyle"], orientation: "portrait", description: site.description, lang: "pt-BR", start_url: `${base}/`, scope: `${base}/`, display: "standalone", background_color: "#1a120c", theme_color: "#1a120c", icons: [192, 512].map((n) => ({ src: `${base}/icone-${n}.png`, sizes: `${n}x${n}`, type: "image/png", purpose: "any maskable" })) }, null, 2),
   );
+
+  // ── Google Play (TWA): prova que o app da loja é dono deste domínio.
+  // Na Vercel: TWA_PACOTE (ex.: online.appmarceneiro.app) e TWA_SHA256 (impressão digital SHA-256 da chave de assinatura do Play Console).
+  limpar(pub(".well-known"));
+  if (process.env.TWA_PACOTE && process.env.TWA_SHA256) {
+    escrever(
+      pub(".well-known", "assetlinks.json"),
+      JSON.stringify(
+        [
+          {
+            relation: ["delegate_permission/common.handle_all_urls"],
+            target: { namespace: "android_app", package_name: process.env.TWA_PACOTE, sha256_cert_fingerprints: process.env.TWA_SHA256.split(",").map((x) => x.trim().toUpperCase()) },
+          },
+        ],
+        null,
+        2,
+      ),
+    );
+    console.log("assetlinks.json gerado para", process.env.TWA_PACOTE);
+  }
 
   // ── API + conteúdo protegido
   // Hostinger: API em PHP dentro de public/api e dados em public/api/_dados (negado pelo .htaccess).
