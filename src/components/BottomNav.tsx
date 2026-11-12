@@ -36,6 +36,13 @@ const ICONES: Record<string, React.ReactNode> = {
       <path d="m10 9.2 5 2.8-5 2.8z" fill="currentColor" />
     </svg>
   ),
+  orcamento: (
+    <svg viewBox="0 0 24 24" {...P}>
+      <path d="M7 3h7l4 4v14H7z" />
+      <path d="M14 3v4h4M10 12h5M10 16h5" />
+      <path d="M19.5 2.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" fill="currentColor" stroke="none" />
+    </svg>
+  ),
   mais: (
     <svg viewBox="0 0 24 24" {...P}>
       <circle cx="5.5" cy="12" r="1.4" fill="currentColor" />
@@ -51,9 +58,12 @@ const TABS = [
   { href: "/aulas", label: "Aulas", icone: "aulas" },
   { href: "/videos", label: "Vídeos", icone: "videos" },
 ];
+// versão da loja: sem vídeos, com Orçamento no menu de baixo
+const TABS_LOJA = [TABS[0], TABS[1], { href: "/orcamento", label: "Orçamento", icone: "orcamento" }, TABS[2]];
 
 const MAIS = [
   { href: "/", label: "Início" },
+  ...(LOJA ? [] : [{ href: "/orcamento/", label: "✨ Orçamento com IA" }]),
   { href: "/plano-de-corte/", label: "Plano de corte", plain: true },
   { href: "/membro/", label: "Minha oficina" },
   { href: "/blog/", label: "Dicas e técnicas" },
@@ -113,7 +123,7 @@ export function BottomNav() {
         className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-[calc(10px+env(safe-area-inset-bottom))] lg:hidden"
       >
         <div className="flex w-full max-w-md items-stretch justify-around rounded-2xl border border-bark-900/10 bg-white/95 px-1 py-1.5 shadow-(--shadow-lift) backdrop-blur">
-          {TABS.map((t) => {
+          {(LOJA ? TABS_LOJA : TABS).map((t) => {
             const on = ativo(t.href);
             return (
               <Link

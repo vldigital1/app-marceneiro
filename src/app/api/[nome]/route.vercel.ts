@@ -1,10 +1,10 @@
 // API de desbloqueio para a VERCEL (mesma lógica de server/api/*.php da Hostinger).
 // Só entra no build quando VERCEL=1 (ver pageExtensions em next.config.ts).
 // Configuração por variáveis de ambiente no painel da Vercel:
-//   SENHAS   → senha(s) de desbloqueio, separadas por vírgula
-//   SEGREDO  → texto aleatório longo (24+ caracteres) que assina o cookie
+//   SENHAS (ou SENHA) → senha(s) de desbloqueio, separadas por vírgula
+//   SEGREDO (opcional) → texto aleatório longo (24+ caracteres) que assina o cookie
 //   DIAS     → validade do desbloqueio em dias (padrão 365)
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -13,11 +13,20 @@ export const dynamic = "force-dynamic";
 
 const COOKIE = "adm_acesso";
 const DADOS = join(process.cwd(), "dados-protegidos");
-const SENHAS = (process.env.SENHAS ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-const SEGREDO = process.env.SEGREDO ?? "";
+// SENHAS (ou SENHA): senha(s) de desbloqueio, separadas por vírgula.
+const SENHAS = (process.env.SENHAS ?? process.env.SENHA ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+// SEGREDO é opcional: sem ele, a chave de assinatura é derivada da própria senha (que é secreta).
+// Quem não tem a senha não consegue forjar o acesso; trocar a senha invalida os acessos antigos.
+const SEGREDO =
+  process.env.SEGREDO && process.env.SEGREDO.length >= 24
+    ? process.env.SEGREDO
+    : SENHAS.length
+      ? createHash("sha256").update(`app-do-marceneiro|${SENHAS.join(",")}`).digest("hex")
+      : "";
 const DIAS = Math.max(1, Number(process.env.DIAS ?? 365) || 365);
 const DOMINIOS = (process.env.NEXT_PUBLIC_DOMINIOS ?? "").split(",").map((d) => d.trim().toLowerCase()).filter(Boolean);
 const tentativas = new Map<string, { n: number; t: number }>();
+const usoIA = new Map<string, number[]>();
 
 const b64u = (b: Buffer | string) => Buffer.from(b).toString("base64url");
 const hmac = (txt: string) => createHmac("sha256", SEGREDO).update(txt);
@@ -65,7 +74,7 @@ async function tratar(req: Request, nome: string) {
 
   if (nome === "desbloquear.php") {
     if (req.method !== "POST") return json({ ok: false, erro: "Método não permitido." }, 405);
-    if (!SEGREDO || SEGREDO.length < 24 || !SENHAS.length) return json({ ok: false, erro: "Servidor sem senha configurada." }, 500);
+    if (!SEGREDO || !SENHAS.length) return json({ ok: false, erro: "Servidor sem senha configurada." }, 500);
     const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "?";
     const t = tentativas.get(ip);
     if (t && t.n >= 8 && Date.now() - t.t < 900e3) return json({ ok: false, erro: "Muitas tentativas. Aguarde 15 minutos e tente de novo." }, 429);
@@ -107,6 +116,31 @@ async function tratar(req: Request, nome: string) {
     return new Response(readFileSync(f), {
       headers: { ...HEAD, "Content-Type": tipo === "pdf" ? "application/pdf" : "image/svg+xml", ...(tipo === "pdf" ? { "Content-Disposition": `attachment; filename="${id}.pdf"` } : {}) },
     });
+  }
+
+  if (nome === "assistente") {
+    // assistente de orçamento por voz: só para quem já liberou o app (evita custo com uso anônimo)
+    if (req.method !== "POST") return json({ erro: "Método não permitido." }, 405);
+    if (!process.env.ANTHROPIC_API_KEY) return json({ erro: "Assistente de IA ainda não configurado.", semIA: true }, 503);
+    if (!liberado(req)) return json({ erro: "O assistente de IA faz parte do acesso completo. Digite sua senha de acesso.", bloqueado: true }, 401);
+    const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "?";
+    const agora = Date.now();
+    const uso = (usoIA.get(ip) ?? []).filter((t) => agora - t < 3600e3);
+    if (uso.length >= 30) return json({ erro: "Muitos pedidos ao assistente nesta hora. Tente de novo mais tarde." }, 429);
+    usoIA.set(ip, [...uso, agora]);
+    let corpo: { texto?: string; clientes?: string[] } = {};
+    try {
+      corpo = (await req.json()) as typeof corpo;
+    } catch {}
+    const texto = String(corpo.texto ?? "").trim().slice(0, 3000);
+    if (texto.length < 3) return json({ erro: "Fale ou escreva o que vai no orçamento." }, 400);
+    const clientes = Array.isArray(corpo.clientes) ? corpo.clientes.map((c) => String(c).slice(0, 80)) : [];
+    try {
+      const { interpretarPedido } = await import("@/lib/assistente-ia");
+      return json(await interpretarPedido({ texto, clientes }));
+    } catch (e) {
+      return json({ erro: e instanceof Error ? e.message : "Falha no assistente." }, 502);
+    }
   }
 
   return new Response(null, { status: 404 });

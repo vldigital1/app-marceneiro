@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { VideosView } from "@/components/VideosView";
 import { TEMAS, VIDEOS } from "@/content/videos";
+import { LOJA } from "@/lib/loja";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = { title: "Vídeos de marcenaria" };
 
 export default function VideosPage() {
+  if (LOJA) notFound(); // a versão da Play Store não tem vídeos
   // códigos de vídeos exclusivos não vão para a página: o servidor entrega depois da senha
   const lista = VIDEOS.map((v) => ({ id: v.id, titulo: v.titulo, descricao: v.descricao, livre: v.livre, tema: v.tema, youtubeId: v.livre ? v.youtubeId : undefined }));
   const temas = TEMAS.filter((t) => VIDEOS.some((v) => v.tema === t));

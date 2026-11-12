@@ -11,10 +11,11 @@ const NAV = [
   { href: "/catalogo", label: "Projetos" },
   { href: "/configurador", label: "Sob medida" },
   { href: "/aulas", label: "Aulas" },
+  { href: "/orcamento", label: "Orçamento" },
   { href: "/videos", label: "Vídeos" },
   { href: "/plano-de-corte/", label: "Plano de corte", plain: true },
   { href: "/oferta", label: "Desbloquear" },
-].filter((n) => !LOJA || n.href !== "/oferta");
+].filter((n) => !LOJA || (n.href !== "/oferta" && n.href !== "/videos"));
 
 export function SiteHeader() {
   const pathname = usePathname();
