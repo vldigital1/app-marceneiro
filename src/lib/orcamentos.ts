@@ -56,7 +56,7 @@ export const PAGAMENTOS = ["50% de entrada e 50% na entrega", "À vista no PIX",
 type Estado = { empresa: Empresa; clientes: Cliente[]; orcamentos: Orcamento[]; proximo: number };
 
 const KEY = "amc-orcamentos-v1";
-export const EMPRESA_VAZIA: Empresa = { nome: "", responsavel: "", telefone: "", email: "", cidade: "", documento: "", instagram: "", pix: "", logo: "", cor: "#b97f35" };
+export const EMPRESA_VAZIA: Empresa = { nome: "", responsavel: "", telefone: "", email: "", cidade: "", documento: "", instagram: "", pix: "", logo: "", cor: "#475569" };
 const VAZIO: Estado = { empresa: EMPRESA_VAZIA, clientes: [], orcamentos: [], proximo: 1 };
 
 let snap: Estado = VAZIO;

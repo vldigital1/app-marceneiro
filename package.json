@@ -13,7 +13,6 @@
     "prompts": "tsx scripts/export-prompts.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.8.0",
     "@react-pdf/renderer": "^4.9.0",
     "framer-motion": "^13.4.2",
     "html-to-image": "^1.11.13",

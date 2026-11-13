@@ -37,6 +37,20 @@
         "4177"
       ],
       "port": 4177
+    },
+    {
+      "name": "dev-loja",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "cross-env",
+        "VERCEL=1",
+        "NEXT_PUBLIC_LOJA=1",
+        "next",
+        "dev",
+        "-p",
+        "4178"
+      ],
+      "port": 4178
     }
   ]
 }

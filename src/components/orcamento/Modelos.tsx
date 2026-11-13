@@ -59,7 +59,6 @@ function tema(id: TemplateId, cor: string): Tema {
   }
 }
 
-const num = (n: number) => String(n).padStart(4, "0");
 
 function Logo({ e, t, tamanho = 64 }: { e: Empresa; t: Tema; tamanho?: number }) {
   if (e.logo)
@@ -119,8 +118,7 @@ export const FolhaOrcamento = forwardRef<HTMLDivElement, { o: Orcamento; e: Empr
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 11, letterSpacing: 3, fontWeight: 700, color: cabecalhoCheio ? t.cabecalhoTexto : t.destaque, opacity: cabecalhoCheio ? 0.85 : 1 }}>ORÇAMENTO</div>
-              <div style={{ fontFamily: t.titulo, fontSize: vibrante ? 40 : 30, fontWeight: 800, lineHeight: 1.1, color: o.template === "premium" ? t.destaque : undefined }}>Nº {num(o.numero)}</div>
+              <div style={{ fontFamily: t.titulo, fontSize: vibrante ? 38 : 30, fontWeight: 800, lineHeight: 1.1, letterSpacing: 1, color: o.template === "premium" ? t.destaque : cabecalhoCheio ? t.cabecalhoTexto : t.destaque }}>ORÇAMENTO</div>
               <div style={{ fontSize: 11.5, opacity: 0.85, marginTop: 4 }}>
                 Emitido em {dataBR(o.criadoEm)} · válido até {validade}
               </div>

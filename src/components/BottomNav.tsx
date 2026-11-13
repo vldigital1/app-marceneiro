@@ -40,7 +40,6 @@ const ICONES: Record<string, React.ReactNode> = {
     <svg viewBox="0 0 24 24" {...P}>
       <path d="M7 3h7l4 4v14H7z" />
       <path d="M14 3v4h4M10 12h5M10 16h5" />
-      <path d="M19.5 2.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" fill="currentColor" stroke="none" />
     </svg>
   ),
   mais: (
@@ -63,7 +62,7 @@ const TABS_LOJA = [TABS[0], TABS[1], { href: "/orcamento", label: "Orçamento", 
 
 const MAIS = [
   { href: "/", label: "Início" },
-  ...(LOJA ? [] : [{ href: "/orcamento/", label: "✨ Orçamento com IA" }]),
+  ...(LOJA ? [] : [{ href: "/orcamento/", label: "Orçamento" }]),
   { href: "/plano-de-corte/", label: "Plano de corte", plain: true },
   { href: "/membro/", label: "Minha oficina" },
   { href: "/blog/", label: "Dicas e técnicas" },
@@ -74,7 +73,9 @@ const MAIS = [
 export function BottomNav() {
   const pathname = usePathname();
   const [aberto, setAberto] = useState(false);
-  useEffect(() => setAberto(false), [pathname]);
+  useEffect(() => {
+    setAberto(false);
+  }, [pathname]);
   const ativo = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (

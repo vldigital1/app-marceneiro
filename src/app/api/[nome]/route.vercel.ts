@@ -26,7 +26,6 @@ const SEGREDO =
 const DIAS = Math.max(1, Number(process.env.DIAS ?? 365) || 365);
 const DOMINIOS = (process.env.NEXT_PUBLIC_DOMINIOS ?? "").split(",").map((d) => d.trim().toLowerCase()).filter(Boolean);
 const tentativas = new Map<string, { n: number; t: number }>();
-const usoIA = new Map<string, number[]>();
 
 const b64u = (b: Buffer | string) => Buffer.from(b).toString("base64url");
 const hmac = (txt: string) => createHmac("sha256", SEGREDO).update(txt);
@@ -116,31 +115,6 @@ async function tratar(req: Request, nome: string) {
     return new Response(readFileSync(f), {
       headers: { ...HEAD, "Content-Type": tipo === "pdf" ? "application/pdf" : "image/svg+xml", ...(tipo === "pdf" ? { "Content-Disposition": `attachment; filename="${id}.pdf"` } : {}) },
     });
-  }
-
-  if (nome === "assistente") {
-    // assistente de orçamento por voz: só para quem já liberou o app (evita custo com uso anônimo)
-    if (req.method !== "POST") return json({ erro: "Método não permitido." }, 405);
-    if (!process.env.ANTHROPIC_API_KEY) return json({ erro: "Assistente de IA ainda não configurado.", semIA: true }, 503);
-    if (!liberado(req)) return json({ erro: "O assistente de IA faz parte do acesso completo. Digite sua senha de acesso.", bloqueado: true }, 401);
-    const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "?";
-    const agora = Date.now();
-    const uso = (usoIA.get(ip) ?? []).filter((t) => agora - t < 3600e3);
-    if (uso.length >= 30) return json({ erro: "Muitos pedidos ao assistente nesta hora. Tente de novo mais tarde." }, 429);
-    usoIA.set(ip, [...uso, agora]);
-    let corpo: { texto?: string; clientes?: string[] } = {};
-    try {
-      corpo = (await req.json()) as typeof corpo;
-    } catch {}
-    const texto = String(corpo.texto ?? "").trim().slice(0, 3000);
-    if (texto.length < 3) return json({ erro: "Fale ou escreva o que vai no orçamento." }, 400);
-    const clientes = Array.isArray(corpo.clientes) ? corpo.clientes.map((c) => String(c).slice(0, 80)) : [];
-    try {
-      const { interpretarPedido } = await import("@/lib/assistente-ia");
-      return json(await interpretarPedido({ texto, clientes }));
-    } catch (e) {
-      return json({ erro: e instanceof Error ? e.message : "Falha no assistente." }, 502);
-    }
   }
 
   return new Response(null, { status: 404 });

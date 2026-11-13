@@ -39,11 +39,10 @@ export default function PrivacidadePage() {
           responsável por ter autorização dos seus clientes para guardar esses contatos.
         </p>
 
-        <h2>4. Assistente de IA</h2>
+        <h2>4. Respostas por voz</h2>
         <p>
-          Quando você usa o assistente de IA, o texto do seu pedido (o que você falou, transcrito pelo reconhecimento de voz do próprio aparelho, ou o que digitou) e os nomes
-          dos clientes cadastrados são enviados ao nosso servidor e processados pela Anthropic (fornecedora do modelo de IA Claude) apenas para montar o orçamento. Não
-          enviamos o áudio. O reconhecimento de voz é feito pelo serviço de voz do seu navegador ou sistema (por exemplo, o Google no Android), conforme a política dele.
+          No assistente de orçamento você pode responder falando. A voz é transformada em texto pelo serviço de reconhecimento de voz do seu próprio aparelho ou navegador
+          (por exemplo, o Google no Android), conforme a política dele. O app não grava nem envia o áudio para nós; o texto fica só no seu aparelho.
         </p>
 
         <h2>5. Senha de acesso</h2>

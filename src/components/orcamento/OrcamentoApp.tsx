@@ -3,13 +3,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { estimateCost } from "@/data/gen/kit";
-import { useAcesso } from "@/lib/acesso";
 import { CORES, TIPOS, calcular } from "@/lib/configurador";
 import { baixar, compartilhar, gerarImagem, gerarPdf } from "@/lib/exportar-orcamento";
 import { brl, dataBR, EMPRESA_VAZIA, novoId, orc, PAGAMENTOS, soDigitos, TEMPLATES, totais, useOrcamentos, type Cliente, type Empresa, type Item, type Orcamento, type Status } from "@/lib/orcamentos";
 import { useWorkshop } from "@/lib/workshop";
-import { UnlockBox } from "../UnlockBox";
-import { AssistenteVoz, type ResultadoIA } from "./AssistenteVoz";
+import { AssistentePerguntas, type RespostasAssistente } from "./AssistentePerguntas";
 import { A4_LARGURA, FolhaOrcamento } from "./Modelos";
 
 type Aba = "orcamentos" | "clientes" | "empresa";
@@ -21,16 +19,16 @@ const STATUS: Record<Status, { nome: string; cls: string }> = {
   recusado: { nome: "Recusado", cls: "bg-rose-100 text-rose-700" },
 };
 
-const CORES_MARCA = ["#b97f35", "#7c3aed", "#2563eb", "#0f766e", "#16a34a", "#dc2626", "#db2777", "#111827", "#ea580c", "#475569"];
+const CORES_MARCA = ["#475569", "#24180f", "#111827", "#b97f35", "#9a6528", "#2563eb", "#0f766e", "#16a34a", "#dc2626", "#ea580c"];
 
-const campo = "w-full rounded-xl border border-bark-900/10 bg-white px-3.5 py-2.5 text-[15px] text-bark-900 placeholder:text-bark-500/70 focus:border-violet-400 focus:ring-2 focus:ring-violet-200 focus:outline-none";
+const campo = "w-full rounded-xl border border-bark-900/10 bg-white px-3.5 py-2.5 text-[15px] text-bark-900 placeholder:text-bark-500/70 focus:border-wood-500 focus:ring-2 focus:ring-wood-200 focus:outline-none";
 const rotulo = "mb-1 block text-xs font-semibold tracking-wide text-bark-500 uppercase";
 const cartao = "rounded-3xl border border-bark-900/[0.07] bg-white/90 p-4 shadow-[0_8px_30px_-12px_rgba(36,24,15,0.18)] backdrop-blur sm:p-5";
 
 function Titulo({ n, t, sub }: { n: number; t: string; sub?: string }) {
   return (
     <div className="mb-3 flex items-center gap-3">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-bold text-white">{n}</span>
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-wood-500 text-sm font-bold text-white">{n}</span>
       <div>
         <h3 className="font-display text-lg leading-tight text-bark-900">{t}</h3>
         {sub && <p className="text-xs text-bark-500">{sub}</p>}
@@ -66,7 +64,9 @@ function EmpresaForm({ empresa, aoSalvar }: { empresa: Empresa; aoSalvar?: () =>
   const [e, setE] = useState<Empresa>(empresa);
   const [salvo, setSalvo] = useState(false);
   const [erroLogo, setErroLogo] = useState("");
-  useEffect(() => setE(empresa), [empresa]);
+  useEffect(() => {
+    setE(empresa);
+  }, [empresa]);
   const set = (k: keyof Empresa, v: string) => {
     setE((x) => ({ ...x, [k]: v }));
     setSalvo(false);
@@ -74,7 +74,7 @@ function EmpresaForm({ empresa, aoSalvar }: { empresa: Empresa; aoSalvar?: () =>
   return (
     <div className={cartao}>
       <div className="flex items-center gap-4">
-        <label className="group relative flex h-24 w-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-violet-300 bg-violet-50 text-center text-xs font-semibold text-violet-700">
+        <label className="group relative flex h-24 w-24 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-wood-400 bg-wood-50 text-center text-xs font-semibold text-wood-600">
           {e.logo ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={e.logo} alt="Logo da marcenaria" className="h-full w-full object-contain p-1" />
@@ -137,7 +137,7 @@ function EmpresaForm({ empresa, aoSalvar }: { empresa: Empresa; aoSalvar?: () =>
         <span className={rotulo}>Cor da sua marca</span>
         <div className="flex flex-wrap items-center gap-2">
           {CORES_MARCA.map((c) => (
-            <button key={c} type="button" aria-label={`Cor ${c}`} onClick={() => set("cor", c)} className={`h-9 w-9 rounded-full ring-offset-2 ${e.cor === c ? "ring-2 ring-violet-500" : ""}`} style={{ background: c }} />
+            <button key={c} type="button" aria-label={`Cor ${c}`} onClick={() => set("cor", c)} className={`h-9 w-9 rounded-full ring-offset-2 ${e.cor === c ? "ring-2 ring-wood-600" : ""}`} style={{ background: c }} />
           ))}
           <label className="flex h-9 items-center gap-2 rounded-full border border-bark-900/10 px-3 text-xs font-semibold text-bark-700">
             Outra
@@ -152,7 +152,7 @@ function EmpresaForm({ empresa, aoSalvar }: { empresa: Empresa; aoSalvar?: () =>
           setSalvo(true);
           aoSalvar?.();
         }}
-        className="mt-5 w-full rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3.5 font-semibold text-white shadow-lg shadow-violet-500/25 active:scale-[0.99]"
+        className="mt-5 w-full rounded-2xl bg-bark-900 px-5 py-3.5 font-semibold text-white shadow-lg shadow-bark-900/20 active:scale-[0.99]"
       >
         {salvo ? "✓ Dados salvos" : "Salvar dados da marcenaria"}
       </button>
@@ -221,14 +221,14 @@ function Clientes({ clientes, orcamentos, aoNovoOrcamento }: { clientes: Cliente
         const qtd = orcamentos.filter((o) => o.clienteId === c.id).length;
         return (
           <div key={c.id} className={`${cartao} flex items-center gap-3`}>
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 font-bold text-white">{c.nome.slice(0, 1).toUpperCase()}</span>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-wood-400 to-wood-600 font-bold text-white">{c.nome.slice(0, 1).toUpperCase()}</span>
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-bark-900">{c.nome}</p>
               <p className="truncate text-xs text-bark-500">
                 {c.telefone || "sem telefone"} · {qtd} orçamento{qtd === 1 ? "" : "s"}
               </p>
             </div>
-            <button type="button" onClick={() => aoNovoOrcamento(c)} className="rounded-xl bg-violet-100 px-3 py-2 text-xs font-bold text-violet-700">
+            <button type="button" onClick={() => aoNovoOrcamento(c)} className="rounded-xl bg-wood-100 px-3 py-2 text-xs font-bold text-wood-600">
               Orçar
             </button>
             <button type="button" onClick={() => setEditando(c)} className="rounded-xl px-2 py-2 text-xs font-semibold text-bark-600">
@@ -254,7 +254,6 @@ function Clientes({ clientes, orcamentos, aoNovoOrcamento }: { clientes: Cliente
 function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; empresa: Empresa; clientes: Cliente[]; aoFechar: () => void }) {
   const [o, setO] = useState<Orcamento>(inicial);
   const [novoCliente, setNovoCliente] = useState(false);
-  const [bloqueadoIA, setBloqueadoIA] = useState(false);
   const [gerando, setGerando] = useState<"" | "pdf" | "png" | "share">("");
   const [aviso, setAviso] = useState("");
   const [verSobMedida, setVerSobMedida] = useState(false);
@@ -262,7 +261,6 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
   const caixaPrevia = useRef<HTMLDivElement>(null);
   const [escala, setEscala] = useState(0.45);
   const [alturaFolha, setAlturaFolha] = useState(1123);
-  const { liberado } = useAcesso();
   const { salvos } = useWorkshop();
   const tt = totais(o);
 
@@ -294,25 +292,47 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
 
   const escolherCliente = (c: Cliente) => up({ clienteId: c.id, cliente: { nome: c.nome, telefone: c.telefone, endereco: c.endereco, email: c.email } });
 
-  const aplicarIA = (r: ResultadoIA) => {
+  const aplicarAssistente = (r: RespostasAssistente) => {
+    // salva/acha o cliente fora do setState (o React pode rodar o updater duas vezes)
+    let cli: Cliente | undefined;
+    if (r.cliente.nome) {
+      cli = r.cliente.id ? clientes.find((c) => c.id === r.cliente.id) : clientes.find((c) => c.nome.toLowerCase() === r.cliente.nome.toLowerCase());
+      cli ??= orc.salvarCliente({ nome: r.cliente.nome, telefone: r.cliente.telefone, email: "", endereco: "" });
+    }
     setO((x) => {
       const n = { ...x };
-      if (r.cliente?.nome) {
-        const achado = clientes.find((c) => c.nome.toLowerCase() === r.cliente.nome.toLowerCase());
-        const cli = achado ?? orc.salvarCliente({ nome: r.cliente.nome, telefone: soDigitos(r.cliente.telefone ?? ""), email: "", endereco: r.cliente.endereco ?? "" });
+      if (cli) {
         n.clienteId = cli.id;
-        n.cliente = { nome: cli.nome, telefone: cli.telefone || soDigitos(r.cliente.telefone ?? ""), endereco: cli.endereco || r.cliente.endereco || "", email: cli.email };
+        n.cliente = { nome: cli.nome, telefone: cli.telefone || r.cliente.telefone, endereco: cli.endereco, email: cli.email };
       }
-      n.itens = [...x.itens, ...r.itens.map((i) => ({ id: novoId(), descricao: i.descricao, detalhes: i.detalhes ?? "", quantidade: Number(i.quantidade) || 1, unidade: i.unidade || "un", valorUnitario: Number(i.valorUnitario) || 0 }))];
-      if (r.desconto?.tipo) n.desconto = { tipo: r.desconto.tipo, valor: Number(r.desconto.valor) || 0 };
-      if (r.adicional?.valor) n.adicional = { nome: r.adicional.nome || "Entrega e instalação", valor: Number(r.adicional.valor) || 0 };
+      n.itens = [...x.itens, ...r.itens.map((i) => ({ id: novoId(), descricao: i.descricao, detalhes: i.detalhes, quantidade: i.quantidade, unidade: "un", valorUnitario: i.valorUnitario }))];
       if (r.prazoDias) n.prazoDias = r.prazoDias;
       if (r.pagamento) n.pagamento = r.pagamento;
-      if (r.observacoes) n.observacoes = x.observacoes ? `${x.observacoes}\n${r.observacoes}` : r.observacoes;
+      if (r.adicional) n.adicional = { nome: x.adicional.nome || "Entrega e instalação", valor: r.adicional };
+      if (r.descontoPct) n.desconto = { tipo: "%", valor: r.descontoPct };
       if (!n.titulo && r.itens.length) n.titulo = r.itens.length === 1 ? r.itens[0].descricao : `${r.itens[0].descricao} e mais ${r.itens.length - 1}`;
       return n;
     });
   };
+
+  // móveis salvos no Sob medida, com preço sugerido (material estimado × 2,5)
+  const moveisSalvos = salvos.map((s) => {
+    const tipo = TIPOS.find((t) => t.id === s.tipo);
+    let custo = 0;
+    try {
+      if (tipo) custo = estimateCost(calcular(tipo, s.valores, s.caixa, s.frente).materials, calcular(tipo, s.valores, s.caixa, s.frente).cut, 0)[1];
+    } catch {
+      custo = 0;
+    }
+    const cor = (k: string) => CORES.find((c) => c.look === k)?.nome ?? k;
+    const [h, w, d] = s.dims;
+    return {
+      id: s.id,
+      nome: s.tipoNome,
+      detalhes: `${(w / 10).toLocaleString("pt-BR")} × ${(h / 10).toLocaleString("pt-BR")} × ${(d / 10).toLocaleString("pt-BR")} cm · caixa ${cor(s.caixa)} · frentes ${cor(s.frente)}`,
+      valor: custo ? Math.round((custo * 2.5) / 10) * 10 : 0,
+    };
+  });
 
   const doSobMedida = (id: string) => {
     const s = salvos.find((x) => x.id === id);
@@ -337,8 +357,8 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
     setAviso(custo ? `Preço sugerido: ${brl(Math.round((custo * 2.5) / 10) * 10)} (material estimado ${brl(custo)} × 2,5). Ajuste se quiser.` : "");
   };
 
-  const nomeArquivo = (ext: string) => `orcamento-${String(o.numero).padStart(4, "0")}-${(o.cliente.nome || "cliente").toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-")}.${ext}`;
-  const textoZap = () => `Olá${o.cliente.nome ? `, ${o.cliente.nome.split(" ")[0]}` : ""}! Segue o orçamento nº ${String(o.numero).padStart(4, "0")} da ${empresa.nome || "marcenaria"}: total de ${brl(tt.total)}. Qualquer dúvida, estou à disposição.`;
+  const nomeArquivo = (ext: string) => `orcamento-${(o.cliente.nome || "cliente").toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-")}-${dataBR(o.criadoEm).replace(/\//g, "-")}.${ext}`;
+  const textoZap = () => `Olá${o.cliente.nome ? `, ${o.cliente.nome.split(" ")[0]}` : ""}! Segue o orçamento da ${empresa.nome || "marcenaria"}: total de ${brl(tt.total)}. Qualquer dúvida, estou à disposição.`;
 
   const exportar = async (tipo: "pdf" | "png" | "share") => {
     if (!folha.current) return;
@@ -373,7 +393,6 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
           ← Orçamentos
         </button>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-bark-500">Nº {String(o.numero).padStart(4, "0")}</span>
           <select value={o.status} onChange={(e) => up({ status: e.target.value as Status })} className={`rounded-full px-3 py-1.5 text-xs font-bold ${STATUS[o.status].cls}`}>
             {(Object.keys(STATUS) as Status[]).map((s) => (
               <option key={s} value={s}>
@@ -390,19 +409,19 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
         </p>
       )}
 
-      {bloqueadoIA && !liberado ? <UnlockBox titulo="Assistente de IA" texto="O assistente que entende áudio faz parte do acesso completo. Digite sua senha de acesso." /> : <AssistenteVoz clientes={clientes.map((c) => c.nome)} aoPreencher={aplicarIA} onBloqueado={() => setBloqueadoIA(true)} />}
+      <AssistentePerguntas clientes={clientes} moveisSalvos={moveisSalvos} aoConcluir={aplicarAssistente} />
 
       {/* 1. CLIENTE */}
       <div className={cartao}>
         <Titulo n={1} t="Cliente" sub="Escolha um cliente salvo ou cadastre um novo" />
         {o.cliente.nome && !novoCliente ? (
-          <div className="flex items-center gap-3 rounded-2xl bg-violet-50 p-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-600 font-bold text-white">{o.cliente.nome.slice(0, 1).toUpperCase()}</span>
+          <div className="flex items-center gap-3 rounded-2xl bg-wood-50 p-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-wood-600 font-bold text-white">{o.cliente.nome.slice(0, 1).toUpperCase()}</span>
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-bark-900">{o.cliente.nome}</p>
               <p className="truncate text-xs text-bark-500">{[o.cliente.telefone, o.cliente.endereco].filter(Boolean).join(" · ") || "sem contato"}</p>
             </div>
-            <button type="button" onClick={() => up({ clienteId: "", cliente: { nome: "", telefone: "", endereco: "", email: "" } })} className="text-xs font-semibold text-violet-700">
+            <button type="button" onClick={() => up({ clienteId: "", cliente: { nome: "", telefone: "", endereco: "", email: "" } })} className="text-xs font-semibold text-wood-600">
               Trocar
             </button>
           </div>
@@ -430,7 +449,7 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
                 ))}
               </select>
             )}
-            <button type="button" onClick={() => setNovoCliente(true)} className="w-full rounded-xl border-2 border-dashed border-violet-300 py-3 text-sm font-semibold text-violet-700">
+            <button type="button" onClick={() => setNovoCliente(true)} className="w-full rounded-xl border-2 border-dashed border-wood-400 py-3 text-sm font-semibold text-wood-600">
               + Cadastrar novo cliente
             </button>
           </div>
@@ -448,7 +467,7 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
           {o.itens.map((i, k) => (
             <motion.div key={i.id} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }} className="mb-3 rounded-2xl border border-bark-900/10 bg-stone-50/70 p-3">
               <div className="flex items-start gap-2">
-                <span className="mt-2.5 text-xs font-bold text-violet-600">{k + 1}</span>
+                <span className="mt-2.5 text-xs font-bold text-wood-600">{k + 1}</span>
                 <div className="min-w-0 flex-1 space-y-2">
                   <input className={campo} placeholder="Descrição (ex.: Guarda-roupa 3 portas)" value={i.descricao} onChange={(e) => upItem(i.id, { descricao: e.target.value })} />
                   <input className={`${campo} text-sm`} placeholder="Detalhes: medidas, material, cor…" value={i.detalhes} onChange={(e) => upItem(i.id, { detalhes: e.target.value })} />
@@ -479,19 +498,19 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
           <button type="button" onClick={() => addItem()} className="rounded-xl bg-bark-900 py-3 text-sm font-semibold text-white">
             + Adicionar item
           </button>
-          <button type="button" onClick={() => setVerSobMedida((v) => !v)} className="rounded-xl border border-violet-300 bg-violet-50 py-3 text-sm font-semibold text-violet-700">
+          <button type="button" onClick={() => setVerSobMedida((v) => !v)} className="rounded-xl border border-wood-400 bg-wood-50 py-3 text-sm font-semibold text-wood-600">
             + Móvel do Sob medida
           </button>
         </div>
         {verSobMedida && (
-          <div className="mt-3 rounded-2xl border border-violet-200 bg-white p-3">
+          <div className="mt-3 rounded-2xl border border-wood-200 bg-white p-3">
             {salvos.length === 0 ? (
               <p className="text-sm text-bark-500">Você ainda não salvou móveis no Sob medida. Monte um lá e toque em “Salvar para o cliente”.</p>
             ) : (
               <ul className="space-y-1">
                 {salvos.map((s) => (
                   <li key={s.id}>
-                    <button type="button" onClick={() => doSobMedida(s.id)} className="w-full rounded-xl px-3 py-2 text-left text-sm hover:bg-violet-50">
+                    <button type="button" onClick={() => doSobMedida(s.id)} className="w-full rounded-xl px-3 py-2 text-left text-sm hover:bg-wood-50">
                       <b>{s.tipoNome}</b> · {s.cliente || "sem nome"} · {s.dims.join(" × ")} mm
                     </button>
                   </li>
@@ -500,7 +519,7 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
             )}
           </div>
         )}
-        {aviso && <p className="mt-3 rounded-xl bg-violet-50 px-3 py-2 text-xs text-violet-800">{aviso}</p>}
+        {aviso && <p className="mt-3 rounded-xl bg-wood-50 px-3 py-2 text-xs text-bark-800">{aviso}</p>}
       </div>
 
       {/* 3. VALORES E CONDIÇÕES */}
@@ -554,7 +573,7 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
             <textarea id="obs" className={campo} rows={3} placeholder="Ex.: Medidas a conferir no local. Garantia de 1 ano." value={o.observacoes} onChange={(e) => up({ observacoes: e.target.value })} />
           </div>
         </div>
-        <div className="mt-4 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-4 text-white">
+        <div className="mt-4 rounded-2xl bg-bark-900 p-4 text-white">
           <div className="flex justify-between text-sm text-white/80">
             <span>Subtotal {brl(tt.subtotal)}</span>
             {tt.desconto > 0 && <span>− {brl(tt.desconto)}</span>}
@@ -576,7 +595,7 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
               key={t.id}
               type="button"
               onClick={() => up({ template: t.id })}
-              className={`w-40 shrink-0 rounded-2xl border p-3 text-left transition-all sm:w-auto ${o.template === t.id ? "border-violet-500 bg-violet-50 ring-2 ring-violet-300" : "border-bark-900/10 bg-white"}`}
+              className={`w-40 shrink-0 rounded-2xl border p-3 text-left transition-all sm:w-auto ${o.template === t.id ? "border-wood-600 bg-wood-50 ring-2 ring-wood-400" : "border-bark-900/10 bg-white"}`}
             >
               <span
                 className="mb-2 block h-14 rounded-xl"
@@ -620,7 +639,7 @@ function Editor({ inicial, empresa, clientes, aoFechar }: { inicial: Orcamento; 
           <button type="button" disabled={!!gerando} onClick={() => exportar("png")} className="rounded-2xl border border-bark-900/15 bg-white px-4 py-3 font-semibold text-bark-900 disabled:opacity-60">
             {gerando === "png" ? "Gerando imagem…" : "Baixar imagem"}
           </button>
-          <button type="button" onClick={() => { orc.salvar(o); aoFechar(); }} className="rounded-2xl border border-violet-300 bg-violet-50 px-4 py-3 font-semibold text-violet-700">
+          <button type="button" onClick={() => { orc.salvar(o); aoFechar(); }} className="rounded-2xl border border-wood-400 bg-wood-50 px-4 py-3 font-semibold text-wood-600">
             Salvar e fechar
           </button>
         </div>
@@ -639,7 +658,7 @@ export function OrcamentoApp() {
   const [filtro, setFiltro] = useState<Status | "todos">("todos");
 
   const lista = useMemo(
-    () => orcamentos.filter((o) => (filtro === "todos" || o.status === filtro) && `${o.cliente.nome} ${o.titulo} ${o.numero}`.toLowerCase().includes(busca.toLowerCase())),
+    () => orcamentos.filter((o) => (filtro === "todos" || o.status === filtro) && `${o.cliente.nome} ${o.titulo}`.toLowerCase().includes(busca.toLowerCase())),
     [orcamentos, busca, filtro],
   );
   const resumo = useMemo(() => {
@@ -659,16 +678,16 @@ export function OrcamentoApp() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(90%_60%_at_100%_0%,rgba(167,139,250,0.18),transparent_60%),radial-gradient(80%_50%_at_0%_10%,rgba(251,191,36,0.14),transparent_60%)]">
+    <div className="min-h-screen bg-[radial-gradient(90%_60%_at_100%_0%,rgba(205,154,84,0.16),transparent_60%),radial-gradient(80%_50%_at_0%_10%,rgba(36,24,15,0.05),transparent_60%)]">
       <div className="container-page max-w-3xl py-6">
         {aberto ? (
           <Editor key={aberto.id} inicial={aberto} empresa={{ ...EMPRESA_VAZIA, ...empresa }} clientes={clientes} aoFechar={() => setAberto(null)} />
         ) : (
           <>
             <header className="mb-5">
-              <p className="text-xs font-bold tracking-[0.2em] text-violet-600 uppercase">Orçamentos com IA</p>
+              <p className="text-xs font-bold tracking-[0.2em] text-wood-600 uppercase">Orçamentos</p>
               <h1 className="mt-1 text-3xl text-bark-900 sm:text-4xl">Orçamento profissional em 1 minuto</h1>
-              <p className="mt-2 text-bark-600">Fale o pedido, a IA preenche. Escolha um dos 6 modelos e envie em PDF ou imagem para o cliente.</p>
+              <p className="mt-2 text-bark-600">Responda algumas perguntas, escolha um dos 6 modelos e envie em PDF ou imagem para o cliente.</p>
             </header>
 
             <div className="mb-5 grid grid-cols-3 gap-2">
@@ -684,8 +703,8 @@ export function OrcamentoApp() {
               ))}
             </div>
 
-            <button type="button" onClick={() => novo()} className="mb-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-amber-500 px-5 py-4 text-lg font-semibold text-white shadow-xl shadow-fuchsia-500/25 active:scale-[0.99]">
-              ✨ Novo orçamento
+            <button type="button" onClick={() => novo()} className="mb-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-bark-900 px-5 py-4 text-lg font-semibold text-white shadow-xl shadow-bark-900/20 active:scale-[0.99]">
+              + Novo orçamento
             </button>
 
             <div className="mb-4 flex rounded-2xl bg-white/80 p-1 ring-1 ring-bark-900/[0.07] backdrop-blur">
@@ -704,27 +723,24 @@ export function OrcamentoApp() {
 
             {aba === "orcamentos" && (
               <div className="space-y-3">
-                <input className={campo} placeholder="Buscar por cliente, projeto ou número" value={busca} onChange={(e) => setBusca(e.target.value)} />
+                <input className={campo} placeholder="Buscar por cliente ou projeto" value={busca} onChange={(e) => setBusca(e.target.value)} />
                 <div className="-mx-1 flex gap-2 overflow-x-auto px-1 [scrollbar-width:none]">
                   {(["todos", "rascunho", "enviado", "aprovado", "recusado"] as const).map((s) => (
-                    <button key={s} type="button" onClick={() => setFiltro(s)} className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${filtro === s ? "bg-violet-600 text-white" : "bg-white text-bark-600 ring-1 ring-bark-900/10"}`}>
+                    <button key={s} type="button" onClick={() => setFiltro(s)} className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${filtro === s ? "bg-bark-900 text-white" : "bg-white text-bark-600 ring-1 ring-bark-900/10"}`}>
                       {s === "todos" ? "Todos" : STATUS[s].nome}
                     </button>
                   ))}
                 </div>
                 {lista.length === 0 && (
-                  <div className="rounded-3xl border border-dashed border-violet-300 bg-white/70 p-8 text-center">
+                  <div className="rounded-3xl border border-dashed border-wood-400 bg-white/70 p-8 text-center">
                     <p className="font-display text-xl text-bark-900">Nenhum orçamento ainda</p>
-                    <p className="mt-1 text-sm text-bark-500">Toque em “Novo orçamento” e fale o pedido para a IA montar pra você.</p>
+                    <p className="mt-1 text-sm text-bark-500">Toque em “Novo orçamento” e responda as perguntas — o orçamento fica pronto em 1 minuto.</p>
                   </div>
                 )}
                 {lista.map((o) => (
                   <div key={o.id} className={`${cartao} flex items-center gap-3`}>
                     <button type="button" onClick={() => setAberto(o)} className="flex min-w-0 flex-1 items-center gap-3 text-left">
-                      <span className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white">
-                        <span className="text-[9px] font-bold opacity-80">Nº</span>
-                        <span className="text-sm leading-none font-bold">{String(o.numero).padStart(4, "0")}</span>
-                      </span>
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-bark-900 text-lg font-bold text-wood-300">{(o.cliente.nome || "?").slice(0, 1).toUpperCase()}</span>
                       <span className="min-w-0">
                         <span className="block truncate font-semibold text-bark-900">{o.cliente.nome || "Sem cliente"}</span>
                         <span className="block truncate text-xs text-bark-500">
@@ -737,13 +753,13 @@ export function OrcamentoApp() {
                       </span>
                     </button>
                     <div className="flex flex-col gap-1">
-                      <button type="button" onClick={() => setAberto(orc.duplicar(o))} className="rounded-lg px-2 py-1 text-xs font-semibold text-violet-700">
+                      <button type="button" onClick={() => setAberto(orc.duplicar(o))} className="rounded-lg px-2 py-1 text-xs font-semibold text-wood-600">
                         Duplicar
                       </button>
                       <button
                         type="button"
                         onClick={() => {
-                          if (confirm(`Excluir o orçamento nº ${String(o.numero).padStart(4, "0")}? Não dá para desfazer.`)) orc.remover(o.id);
+                          if (confirm(`Excluir o orçamento de ${o.cliente.nome || "sem cliente"}? Não dá para desfazer.`)) orc.remover(o.id);
                         }}
                         className="rounded-lg px-2 py-1 text-xs font-semibold text-rose-600"
                       >
