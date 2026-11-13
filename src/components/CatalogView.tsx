@@ -8,6 +8,7 @@ import { CATEGORIES, DIFFICULTIES, ENVIRONMENTS, MATERIALS } from "@/lib/taxonom
 import { ProjectCard } from "./ProjectCard";
 import { SeloSabado } from "./SeloSabado";
 import { useProjetosNovos } from "@/lib/novidades";
+import { LancamentoBanner } from "./LancamentoBanner";
 
 const normalize = (s: string) =>
   s
@@ -132,6 +133,7 @@ export function CatalogView({ items }: { items: ProjectCardData[] }) {
       </aside>
 
       <div>
+        <LancamentoBanner className="mb-3" />
         <SeloSabado novos={novos.size} className="mb-4" />
         <p className="mb-4 text-sm text-bark-700" aria-live="polite">
           <strong className="num">{results.length}</strong> {results.length === 1 ? "projeto encontrado" : "projetos encontrados"}

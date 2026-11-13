@@ -7,6 +7,7 @@ import { getCards, getPosts, getStats } from "@/data";
 import { withBase } from "@/lib/base";
 import { CATEGORIES } from "@/lib/taxonomy";
 import { LOJA } from "@/lib/loja";
+import { LancamentoBanner } from "@/components/LancamentoBanner";
 
 const CAT_ICON: Record<string, string> = {
   quarto: "🛏️",
@@ -85,6 +86,7 @@ export default function Home() {
       </section>
 
       <div className="container-page pt-6">
+        <LancamentoBanner className="mb-3" />
         <SeloSabado />
       </div>
 

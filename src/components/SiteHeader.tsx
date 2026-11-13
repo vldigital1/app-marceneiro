@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { withBase } from "@/lib/base";
 import { Logo } from "./Logo";
 import { LOJA } from "@/lib/loja";
+import { LANCAMENTO, LINK_PLAY } from "@/lib/loja";
 
 // "Plano de corte" é uma página independente (standalone/plano-de-corte/index.html), por isso <a> comum
 const NAV = [
@@ -51,9 +52,15 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <Link href={LOJA ? "/membro/" : "/oferta/#pix"} className="rounded-full bg-wood-400 px-4 py-2 text-sm font-semibold text-bark-950 md:hidden">
-          {LOJA ? "Entrar" : "Desbloquear"}
-        </Link>
+        {LANCAMENTO ? (
+          <a href={LINK_PLAY} target="_blank" rel="noopener noreferrer" className="rounded-full bg-wood-400 px-4 py-2 text-sm font-semibold text-bark-950 md:hidden">
+            Avaliar
+          </a>
+        ) : (
+          <Link href={LOJA ? "/membro/" : "/oferta/#pix"} className="rounded-full bg-wood-400 px-4 py-2 text-sm font-semibold text-bark-950 md:hidden">
+            {LOJA ? "Entrar" : "Desbloquear"}
+          </Link>
+        )}
       </div>
     </header>
   );

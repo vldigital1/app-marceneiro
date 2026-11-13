@@ -29,6 +29,7 @@
         "cross-env",
         "VERCEL=1",
         "NEXT_PUBLIC_LOJA=1",
+        "NEXT_PUBLIC_LANCAMENTO=1",
         "SENHAS=TESTE-LOJA-1",
         "SEGREDO=segredo-de-teste-local-com-mais-de-24-chars",
         "next",

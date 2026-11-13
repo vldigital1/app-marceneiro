@@ -242,7 +242,6 @@ export const FolhaOrcamento = forwardRef<HTMLDivElement, { o: Orcamento; e: Empr
               </div>
             ))}
           </div>
-          <div style={{ textAlign: "center", fontSize: 10.5, color: t.suave, letterSpacing: 0.5 }}>Orçamento gerado com o App do Marceneiro</div>
         </div>
       </div>
     </div>

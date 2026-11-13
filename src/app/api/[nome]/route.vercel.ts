@@ -41,7 +41,11 @@ function cookie(valor: string, maxAge: number) {
   return `${COOKIE}=${valor}; Path=/; Max-Age=${maxAge}; HttpOnly; Secure; SameSite=Lax`;
 }
 
+// Lançamento na loja: tudo aberto para todos (NEXT_PUBLIC_LOJA=1 + NEXT_PUBLIC_LANCAMENTO=1)
+const LANCAMENTO = process.env.NEXT_PUBLIC_LOJA === "1" && process.env.NEXT_PUBLIC_LANCAMENTO === "1";
+
 function liberado(req: Request) {
+  if (LANCAMENTO) return true;
   if (!SEGREDO || !SENHAS.length) return false;
   const c = (req.headers.get("cookie") ?? "").split(/;\s*/).find((x) => x.startsWith(`${COOKIE}=`))?.slice(COOKIE.length + 1) ?? "";
   const [payload, sig] = c.split(".");

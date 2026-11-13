@@ -7,6 +7,7 @@ import type { ProjectCardData } from "@/data/model";
 import { CATEGORIES, MATERIALS, costRange, dims, label } from "@/lib/taxonomy";
 import { LevelBadge } from "./Badges";
 import { ProjectIllustration } from "./ProjectIllustration";
+import { LANCAMENTO } from "@/lib/loja";
 
 export function ProjectCard({ p, index = 0, novo = false }: { p: ProjectCardData; index?: number; novo?: boolean }) {
   return (
@@ -28,7 +29,7 @@ export function ProjectCard({ p, index = 0, novo = false }: { p: ProjectCardData
           )}
           <span className="chip absolute top-3 left-3 border-transparent bg-bark-900/85 text-wood-100">{label(CATEGORIES, p.category)}</span>
           {novo && <span className="chip absolute bottom-3 left-3 border-transparent bg-wood-400 font-bold text-bark-950">🆕 Novo</span>}
-          {p.locked ? (
+          {p.locked && !LANCAMENTO ? (
             <span className="chip absolute top-3 right-3 border-transparent bg-black/75 text-wood-200">🔒 Exclusivo</span>
           ) : (
             <span className="chip absolute top-3 right-3 border-transparent bg-leaf-600 text-white">✓ Liberado</span>
